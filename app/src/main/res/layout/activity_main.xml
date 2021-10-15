@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/principal"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/imagemHigia"
+                android:layout_width="550px"
+                android:layout_height="550px"
+                android:background="@mipmap/higia_logo2"
+                />
+
+            <TextView
+                android:id="@+id/textNomeUsuario"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:textSize="20sp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <ImageView
+                    android:id="@+id/imagemFundo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bordas_arredondadas_branco" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true">
+
+
+                    <FrameLayout
+                        android:id="@+id/Frame3"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/Frame2"
+                        android:translationZ="30dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:background="@mipmap/ic_shortcut_assignment_ind"
+                            android:translationZ="30dp" />
+
+                        <Button
+                            android:id="@+id/botaoMedico"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bordas_arredondadas"
+                            android:onClick="AbrirAbaMedicos"
+                            android:text="@string/Medicos"
+                            android:textColor="#FFFFFF"
+                            android:textSize="24sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/Frame1"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:translationZ="30dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/Frame3"
+                        app:layout_constraintVertical_bias="0.170">
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:background="@mipmap/ic_shortcut_assignment"
+                            android:translationZ="30dp" />
+
+                        <Button
+                            android:id="@+id/botaoExame"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bordas_arredondadas"
+                            android:gravity="center"
+                            android:onClick="AbrirAbaExames"
+                            android:text="@string/Exames"
+                            android:textColor="#FFFFFF"
+                            android:textSize="24sp" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+
+                        android:id="@+id/Frame2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/Frame1"
+                        android:translationZ="30dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/Frame1"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/Frame1"
+                        app:layout_constraintTop_toBottomOf="@+id/Frame1"
+                        app:layout_constraintVertical_bias="0.300">
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:background="@mipmap/ic_shortcut_bubble_chart"
+                            android:translationZ="30dp" />
+
+                        <Button
+                            android:id="@+id/botaoRemedio"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bordas_arredondadas"
+                            android:onClick="AbrirAbaRemedio"
+                            android:text="@string/Remedios"
+                            android:textColor="#FFFFFF"
+                            android:textSize="24sp" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/Frame4"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/Frame3"
+                        android:translationZ="30dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/Frame2"
+                        app:layout_constraintVertical_bias="0.700">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:background="@mipmap/ic_shortcut_domain_verification"
+                            android:translationZ="30dp" />
+
+                        <Button
+                            android:id="@+id/botaoConsulta"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bordas_arredondadas"
+                            android:onClick="AbrirAbaConsultas"
+                            android:text="@string/Consultas"
+                            android:textColor="#FFFFFF"
+                            android:textSize="24sp" />
+                    </FrameLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="30dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.64"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.024">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imagemPerfil"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:onClick="abrirOpcoes"
+                android:src="@drawable/common_full_open_on_phone"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                app:civ_border_color="#629E42"
+                app:civ_border_width="2dp"
+                android:translationZ="60dp" />
+        <FrameLayout
+            android:id="@+id/imagemModal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:translationZ="30dp"
+            android:visibility="invisible"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="50dp">
+        <Button
+            android:id="@+id/botaoModal1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="20dp"
+            android:background="#00FF0000"
+            android:onClick="abrirPerfil"
+            android:text="Abrir Perfil"
+            android:translationZ="30dp" />
+
+        <Button
+            android:id="@+id/botaoModal2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="70dp"
+            android:background="#00FF0000"
+            android:onClick="ModalDeslogar"
+            android:text="Deslogar"
+            android:translationZ="30dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/aba_abrir"
+                app:layout_constraintStart_toStartOf="@+id/imagemPerfil"
+                app:layout_constraintTop_toTopOf="@+id/imagemPerfil" />
+        </FrameLayout>
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

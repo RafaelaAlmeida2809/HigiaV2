@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="secundaria">#FFFFFF</color>
+    <color name="principal">#85EDC0</color>
+    <color name="borda">#08A598</color>
+    <color name="terciaria">#D5FFED</color>
+    <color name="transparente">#00FFFFFF</color>
+    <color name="salvar">#74F17B</color>
+    <color name="cancelar">#F17474</color>
+</resources>

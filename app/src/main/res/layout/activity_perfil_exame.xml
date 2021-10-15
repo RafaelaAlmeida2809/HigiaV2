@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/principal"
+    tools:context=".perfilExameActivity">
+    <ImageView
+        android:id="@+id/imagemFundo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="85dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bordas_arredondadas_branco"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/imagemFundo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textNomePagina"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Exame"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/button6"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:background="@mipmap/ic_shortcut_arrow_back"
+                android:onClick="AbrirAbaExame" />
+
+            <Button
+                android:id="@+id/button15"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/button13"
+                android:background="@mipmap/ic_shortcut_share"
+                android:onClick="Compartilhar" />
+
+            <Button
+                android:id="@+id/button13"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@mipmap/ic_shortcut_settings"
+                android:onClick="Modal" />
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:id="@+id/scrollFundo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:fillViewport="true"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="93dp">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:background="@drawable/fundo_meio_arredondado"/>
+                <TextView
+                    android:id="@+id/text32"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/tipo_exame"
+                    android:textColor="#000000"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/textTipoExame"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:textSize="20sp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:background="@drawable/fundo_meio_arredondado"/>
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/parte_do_corpo"
+                    android:textColor="#000000"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/textParteCorpo"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:textSize="20sp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:background="@drawable/fundo_meio_arredondado"/>
+                <TextView
+                    android:id="@+id/textView28"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/medico"
+                    android:textColor="#000000"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textNomeMedico"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="20sp"/>
+                <Button
+                    android:id="@+id/buttonMedico"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:background="@mipmap/contat"
+                    android:onClick="AbrirPerfilMedico"/>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:background="@drawable/fundo_meio_arredondado"/>
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/data"
+                    android:textColor="#000000"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/textDataExame"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:textSize="20sp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:background="@drawable/fundo_meio_arredondado"/>
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/imagens"
+                    android:textColor="#000000"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+
+            <LinearLayout
+
+                android:id="@+id/LayoutVertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/LayoutHorizontal1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/imagePhoto1"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:scaleType="fitCenter"
+                        android:tag="99" />
+
+                    <Button
+                        android:id="@+id/imagePhoto2"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="5dp"
+                        android:tag="99" />
+
+                    <Button
+                        android:id="@+id/imagePhoto3"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="5dp"
+                        android:tag="99" />
+
+                    <Button
+                        android:id="@+id/imagePhoto4"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="5dp"
+                        android:tag="99" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/LayoutHorizontal2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/imagePhoto5"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:scaleType="fitCenter"
+                        android:tag="99" />
+
+                    <Button
+                        android:id="@+id/imagePhoto6"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="5dp"
+                        android:tag="99" />
+
+                    <Button
+                        android:id="@+id/imagePhoto7"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="5dp"
+                        android:tag="99" />
+
+                    <Button
+                        android:id="@+id/imagePhoto8"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="5dp"
+                        android:tag="99" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/LayoutHorizontal3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/imagePhoto9"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:scaleType="fitCenter"
+                        android:tag="99" />
+
+                    <Button
+                        android:id="@+id/imagePhoto10"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="5dp"
+                        android:tag="99" />
+
+                    <Button
+                        android:id="@+id/imagePhoto11"
+                        android:onClick="AbrirImagem"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="5dp"
+                        android:tag="99" />
+
+                    <Button
+                        android:id="@+id/imagePhoto12"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="5dp"
+                        android:onClick="AbrirImagem"
+                        android:tag="99" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <FrameLayout
+        android:layout_width="175dp"
+        android:layout_height="139dp"
+        android:id="@+id/imagemModal"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.90"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/aba_abrir_colorido"/>
+
+        <Button
+            android:id="@+id/botaoModal1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="20dp"
+            android:translationZ="30dp"
+            android:background="@color/transparente"
+            android:onClick="EditarExame"
+            android:text="@string/editar_exame"/>
+
+        <Button
+            android:id="@+id/botaoModal2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparente"
+            android:onClick="ModalApagar"
+            android:text="@string/deletar_exame"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="70dp"
+            android:translationZ="30dp" />
+
+    </FrameLayout>
+    <RelativeLayout
+        android:id="@+id/modalImagem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:gravity="center">
+        <include
+            layout="@layout/modal_images"/>
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

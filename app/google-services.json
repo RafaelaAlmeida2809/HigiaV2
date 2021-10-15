@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "767916459566",
+    "project_id": "higia-organizador-da-saude",
+    "storage_bucket": "higia-organizador-da-saude.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767916459566:android:943b351b9a251bcb6bc1bf",
+        "android_client_info": {
+          "package_name": "br.com.higiaorganizadordasaude"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "767916459566-mukbce8592cs505ql7idoh2u01941psd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.higiaorganizadordasaude",
+            "certificate_hash": "c88c344543079a9e3e8002a9bfb69bfe8ff9731b"
+          }
+        },
+        {
+          "client_id": "767916459566-pmtinnorr2v9mm9q0jjpjuvt338bgjhp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_0KHDcyOGyB3Qkh-S3RK7tr9HFm6FvMs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "767916459566-pmtinnorr2v9mm9q0jjpjuvt338bgjhp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

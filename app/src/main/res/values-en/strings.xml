@@ -1,0 +1,200 @@
+<resources>
+    <string name="app_name">HigiaExames</string>
+    <string name="caminho_imagem">br.com.higiaorganizadordasaude.provider</string>
+    <string-array name="meses_array">
+        <item>Month</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+    <string-array name="dias_array">
+        <item>Mês</item>
+        <item>31</item>
+        <item>28</item>
+        <item>31</item>
+        <item>30</item>
+        <item>31</item>
+        <item>30</item>
+        <item>31</item>
+        <item>31</item>
+        <item>30</item>
+        <item>31</item>
+        <item>30</item>
+        <item>31</item>
+    </string-array>
+    <string-array name="ordenar_Medicos">
+        <item>Name</item>
+        <item>Specialty</item>
+    </string-array>
+    <string-array name="ordenar_Exame_Coluna">
+        <item>Type</item>
+        <item>Body part</item>
+        <item>Date</item>
+    </string-array>
+    <string-array name="ordenar_Ordem">
+        <item>Growing</item>
+        <item>Descending</item>
+    </string-array>
+    <string-array name="ordenar_Remedio_Coluna">
+        <item>Name</item>
+        <item>Dosage</item>
+        <item>Format</item>
+    </string-array>
+    <string-array name="ordenar_Consulta_Coluna">
+        <item>Doctor</item>
+        <item>Hour</item>
+        <item>Date</item>
+    </string-array>
+    <string-array name="linguagens">
+        <item>Português</item>
+        <item>Inglês</item>
+    </string-array>
+    <string-array name="linguagenSigla">
+        <item>pt</item>
+        <item>en</item>
+    </string-array>
+
+    <string name="higia_exames">Higia Exames</string>
+    <string name="bem_vindo">Welcome to</string>
+    <string name="mensagem_linguagem">Choose the language</string>
+    <string name="Exames">Exams</string>
+    <string name="Remedios">Medicines</string>
+    <string name="Medicos">Doctors</string>
+    <string name="Consultas">Appointments</string>
+    <string name="AddConsulta">ADD APPOINTMENT</string>
+    <string name="AddExame">ADD EXAMS</string>
+    <string name="AddMedico">ADD DOCTORS</string>
+    <string name="AddRemedio">ADD MEDICINES</string>
+    <string name="nome_do_medico">Doctor\'s name:</string>
+    <string name="data_da_consulta">Date of appointment:</string>
+    <string name="Horario_da_consulta">Appointment time:</string>
+    <string name="Obrigatorio">* required</string>
+    <string name="Cancelar">. . Cancel</string>
+    <string name="Salvar">. . Save</string>
+    <string name="tipo_exame">Exam Type:</string>
+    <string name="parte_do_corpo">Body part:</string>
+    <string name="data_do_exame">Exam Date:</string>
+    <string name="adicionar_foto_exame">Add exam photos:</string>
+    <string name="foto_do_medico">Doctor\'s Photo:</string>
+    <string name="especialidade">Specialty:</string>
+    <string name="telefone">Telephone:</string>
+    <string name="endereco">Address:</string>
+    <string name="cep">Zip code:</string>
+    <string name="rua_Av">Street/Avenue:</string>
+    <string name="bairro">Neighborhood:</string>
+    <string name="cidade">City:</string>
+    <string name="uf">State:</string>
+    <string name="numero">Number:</string>
+    <string name="nome_do_remedio">Medicament name:</string>
+    <string name="formado_do_remedio">Medicament format:</string>
+    <string name="dosagem_do_remedio">Medicament dosage:</string>
+    <string name="data_de_inicio">Start date:</string>
+    <string name="data_do_fim">End date:</string>
+    <string name="horario_do_remedio">Medicament Times:</string>
+    <string name="quantidade_de_remedio">Medicament Quantity:</string>
+    <string name="organizar_por_medicos">Organize by Doctors</string>
+    <string name="logar_com_google">Login with Google</string>
+    <string name="mensagem_loguin">Login to continue</string>
+    <string name="nome">Name:</string>
+    <string name="email">Email:</string>
+    <string name="Consulta">APPOINTMENT</string>
+    <string name="Exame">EXAM</string>
+    <string name="Remedio">MEDICINE</string>
+    <string name="medico">Doctor:</string>
+    <string name="data">Date:</string>
+    <string name="horario">Schedule:</string>
+    <string name="horarios">Schedules:</string>
+    <string name="editar_consulta">Edit Appointment</string>
+    <string name="deletar_consulta">Delete Appointments</string>
+    <string name="imagens">Images:</string>
+    <string name="editar_exame">Edit exam</string>
+    <string name="deletar_exame">Delete exam</string>
+    <string name="logradouro">Street address:</string>
+    <string name="editar_medico">Edit doctor:</string>
+    <string name="deletar_medico">Delete doctor:</string>
+    <string name="dosagem">Dosage:</string>
+    <string name="formato">Format:</string>
+    <string name="inicio">Start:</string>
+    <string name="Fim">End:</string>
+    <string name="quantidade_por_vez">Quantity at a time:</string>
+    <string name="voltar">Return</string>
+    <string name="excluir">Delete</string>
+    <string name="editar_remedio">Edit medicine</string>
+    <string name="deletar_remedio">Delete medicine</string>
+    <string name="selecione_medico">Select a doctor</string>
+    <string name="adicione_medico">Add new doctor</string>
+
+
+    <string name="cancelar">Cancel</string>
+    <string name="sim">Yes</string>
+    <string name="nao">No</string>
+    <string name="aguarde">Wait…</string>
+    <string name="carregando">Loading…</string>
+    <string name="erro_conexao">Error connecting to server, check your internet connection</string>
+    <string name="titulo_linguagem">Change linguage</string>
+    <string name="texto_linguagem">Are you sure you want to change the language?</string>
+    <string name="titulo_addConsulta">Save to Calendar</string>
+    <string name="texto_addConsulta">Do you want to save this appointment in your calendar?</string>
+    <string name="titulo_excluir_Imagem">Delete image</string>
+    <string name="texto_excluir_Imagem">Are you sure you want to delete this image?</string>
+    <string name="titulo_despertador">Add alarm clock</string>
+    <string name="texto_despertador">Want to add an alarm clock for</string>
+    <string name="titulo_delConsulta">Delete Appointments</string>
+    <string name="texto_delConsulta">Are you sure you want to delete this appointments?</string>
+    <string name="titulo_delExame">Delete exam</string>
+    <string name="texto_delExame">Are you sure you want to delete this appointments?</string>
+    <string name="titulo_delMedico1">Delete doctor</string>
+    <string name="texto_delMedico1">Are you sure you want to delete this doctor?</string>
+    <string name="titulo_delMedico2">Are you sure to delete this doctor?</string>
+    <string name="texto_delMedico2">This action is irreversible and will delete all files attached to this doctor!</string>
+    <string name="titulo_delRemedio">Delete medicine</string>
+    <string name="texto_delRemedio">Are you sure you want to delete this medicine?</string>
+
+
+
+
+    <string name="hora_tomar">Time to take</string>
+    <string name="ano_valido">Please enter a valid year!</string>
+    <string name="dia_valido">Please enter a valid day!</string>
+    <string name="campo_obrigatorio">Please fill in the required fields.</string>
+    <string name="telefone_valido">Please fill in the phone correctly.</string>
+    <string name="cep_valido">Please fill in the zip code correctly.</string>
+    <string name="exame_de">exam of</string>
+    <string name="segue_anexo">Please find attached my exams for</string>
+    <string name="do_a">from the</string>
+    <string name="na_data_de">on the date of</string>
+
+
+
+
+
+
+    <string name="exemplo_hora">Ex: 12:00</string>
+    <string name="dia">Day</string>
+    <string name="ano">Year</string>
+    <string name="ex_ressonancia">Ex: Resonance</string>
+    <string name="ex_olho">Ex: Eye</string>
+    <string name="ex_nome">Ex: Daniel Antonio</string>
+    <string name="ex_nutricionista">Ex: Nutritionist</string>
+    <string name="ex_telefone">Ex: (55) 99999–9999</string>
+    <string name="ex_cep">Ex: 80000–000</string>
+    <string name="ex_rua">Ex: 14th street</string>
+    <string name="ex_bairro">Ex: Center</string>
+    <string name="ex_cidade">Ex: Los Angeles</string>
+    <string name="ex_uf">Ex: CA</string>
+    <string name="ex_numero">Ex: 1000</string>
+    <string name="ex_nome_remedio">Ex: Dipyrone</string>
+    <string name="ex_formato_remedio">Ex: Pill, Drops…</string>
+    <string name="ex_dosagem_remedio">Ex: 1g</string>
+    <string name="ex_quantidade_remedio">Ex: 12 drops</string>
+
+</resources>

@@ -1,0 +1,195 @@
+<resources>
+    <string name="app_name">Higia - Organizador da Saúde</string>
+    <string name="caminho_imagem">br.com.higiaorganizadordasaude.provider</string>
+    <string-array name="meses_array">
+        <item>Mês</item>
+        <item>Janeiro</item>
+        <item>Fevereiro</item>
+        <item>Março</item>
+        <item>Abril</item>
+        <item>Maio</item>
+        <item>Junho</item>
+        <item>Julho</item>
+        <item>Agosto</item>
+        <item>Setembro</item>
+        <item>Outubro</item>
+        <item>Novembro</item>
+        <item>Desembro</item>
+    </string-array>
+    <string-array name="dias_array">
+        <item>Mês</item>
+        <item>31</item>
+        <item>28</item>
+        <item>31</item>
+        <item>30</item>
+        <item>31</item>
+        <item>30</item>
+        <item>31</item>
+        <item>31</item>
+        <item>30</item>
+        <item>31</item>
+        <item>30</item>
+        <item>31</item>
+    </string-array>
+    <string-array name="ordenar_Medicos">
+        <item>Nome</item>
+        <item>Especialidade</item>
+    </string-array>
+    <string-array name="ordenar_Exame_Coluna">
+        <item>Tipo</item>
+        <item>Parte do Corpo</item>
+        <item>Data</item>
+    </string-array>
+    <string-array name="ordenar_Ordem">
+        <item>Crescente</item>
+        <item>Decrescente</item>
+    </string-array>
+    <string-array name="ordenar_Remedio_Coluna">
+        <item>Nome</item>
+        <item>Dosagem</item>
+        <item>Formato</item>
+    </string-array>
+    <string-array name="ordenar_Consulta_Coluna">
+        <item>Medico</item>
+        <item>Hora</item>
+        <item>Data</item>
+    </string-array>
+    <string-array name="linguagens">
+        <item>Português</item>
+        <item>Inglês</item>
+    </string-array>
+    <string-array name="linguagenSigla">
+        <item>pt</item>
+        <item>en</item>
+    </string-array>
+
+    <string name="higia_exames">Higia Exames</string>
+    <string name="bem_vindo">Bem vindo ao</string>
+    <string name="mensagem_linguagem">Escolha a linguagem</string>
+    <string name="Exames">Exames</string>
+    <string name="Remedios">Remédios</string>
+    <string name="Medicos">Médicos</string>
+    <string name="Consultas">Consultas</string>
+    <string name="AddConsulta">ADICIONAR CONSULTA</string>
+    <string name="AddExame">ADICIONAR EXAME</string>
+    <string name="AddMedico">ADICIONAR MÉDICO</string>
+    <string name="AddRemedio">ADICIONAR REMÉDIO</string>
+    <string name="nome_do_medico">Nome do Médico:</string>
+    <string name="data_da_consulta">Data da consulta:</string>
+    <string name="Horario_da_consulta">Horário da consulta:</string>
+    <string name="Obrigatorio">* Obrigatório</string>
+    <string name="Cancelar">. . . Cancelar</string>
+    <string name="Salvar">. . Salvar</string>
+    <string name="tipo_exame">Tipo do Exame:</string>
+    <string name="parte_do_corpo">Parte do corpo:</string>
+    <string name="data_do_exame">Data do Exame:</string>
+    <string name="adicionar_foto_exame">Adicionar fotos dos exames:</string>
+    <string name="foto_do_medico">Foto do Médico:</string>
+    <string name="especialidade">Especialidade:</string>
+    <string name="telefone">Telefone:</string>
+    <string name="endereco">Endereço:</string>
+    <string name="cep">CEP:</string>
+    <string name="rua_Av">Rua/Av:</string>
+    <string name="bairro">Bairro:</string>
+    <string name="cidade">Cidade:</string>
+    <string name="uf">Uf:</string>
+    <string name="numero">Numero:</string>
+    <string name="nome_do_remedio">Nome do Remédio:</string>
+    <string name="formado_do_remedio">Formato do Remédio:</string>
+    <string name="dosagem_do_remedio">Dosagem do remédio:</string>
+    <string name="data_de_inicio">Data de inicio:</string>
+    <string name="data_do_fim">Data do fim:</string>
+    <string name="horario_do_remedio">Horários do Remedio:</string>
+    <string name="quantidade_de_remedio">Quantidade de Remédio:</string>
+    <string name="organizar_por_medicos">Organizar por Medicos</string>
+    <string name="logar_com_google">Logar com google</string>
+    <string name="mensagem_loguin">Faça o login para continuar</string>
+    <string name="nome">Nome:</string>
+    <string name="email">Email:</string>
+    <string name="Consulta">CONSULTA</string>
+    <string name="Exame">EXAME</string>
+    <string name="Remedio">REMEDIO</string>
+    <string name="medico">Médico:</string>
+    <string name="data">Data:</string>
+    <string name="horario">Horário:</string>
+    <string name="horarios">Horários:</string>
+    <string name="editar_consulta">Editar Consulta</string>
+    <string name="deletar_consulta">Deletar Consulta</string>
+    <string name="imagens">Imagens:</string>
+    <string name="editar_exame">Editar exame</string>
+    <string name="deletar_exame">Deletar exame</string>
+    <string name="logradouro">Logradouro:</string>
+    <string name="editar_medico">Editar Medico:</string>
+    <string name="deletar_medico">Deletar Medico:</string>
+    <string name="dosagem">Dosagem:</string>
+    <string name="formato">Formato:</string>
+    <string name="inicio">Inicio:</string>
+    <string name="Fim">Fim:</string>
+    <string name="quantidade_por_vez">Quantidade por vez:</string>
+    <string name="voltar">Voltar</string>
+    <string name="excluir">. . . Excluir</string>
+    <string name="editar_remedio">Editar Remedio</string>
+    <string name="deletar_remedio">Deletar Remedio</string>
+    <string name="selecione_medico">Selecione um médico</string>
+    <string name="adicione_medico">Adicionar novo médico</string>
+
+
+    <string name="cancelar">Cancelar</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+    <string name="aguarde">Aguarde…</string>
+    <string name="carregando">Carregando…</string>
+    <string name="erro_conexao">Erro ao conectar com o servidor, verifique sua conexão com a internet</string>
+    <string name="titulo_linguagem">Mudar linguagem</string>
+    <string name="texto_linguagem">Você tem certeza que deseja mudar a linguagem?</string>
+    <string name="titulo_addConsulta">Salvar no Calendário</string>
+    <string name="texto_addConsulta">Deseja salvar esta consulta em seu calendário?</string>
+    <string name="titulo_excluir_Imagem">Excluir imagem</string>
+    <string name="texto_excluir_Imagem">Você tem certeza que deseja excluir esta imagem?</string>
+    <string name="titulo_despertador">Adicionar Despertador</string>
+    <string name="texto_despertador">Deseja adicionar um despertador para as</string>
+    <string name="titulo_delConsulta">Apagar consulta</string>
+    <string name="texto_delConsulta">Você tem certeza que deseja apagar esta consulta?</string>
+    <string name="titulo_delExame">Apagar exame</string>
+    <string name="texto_delExame">Você tem certeza que deseja apagar esta consulta?</string>
+    <string name="titulo_delMedico1">Deletar Médico</string>
+    <string name="texto_delMedico1">Você tem certeza que deseja deletar esse médico?</string>
+    <string name="titulo_delMedico2">Certeza ao deletar este médico?</string>
+    <string name="texto_delMedico2">Esta ação é irreversivel e deletará todos os arquivos anexados a este médico!</string>
+    <string name="titulo_delRemedio">Apagar remedio</string>
+    <string name="texto_delRemedio">Você tem certeza que deseja apagar este remedio?</string>
+
+
+    <string name="hora_tomar">Hora de tomar</string>
+    <string name="ano_valido">Por favor, digite um ano válido</string>
+    <string name="dia_valido">Por favor, digite um Dia valido</string>
+    <string name="campo_obrigatorio">Por favor, preencher os campos obrigatórios</string>
+    <string name="telefone_valido">Por favor, preencher corretamente o telefone</string>
+    <string name="cep_valido">Por favor, preencher corretamente o CEP</string>
+    <string name="exame_de">Exame de</string>
+    <string name="segue_anexo">Segue em anexo meus exames de</string>
+    <string name="do_a">do(a)</string>
+    <string name="na_data_de">na data de</string>
+
+
+    <string name="exemplo_hora">Ex: 12:00</string>
+    <string name="dia">Dia</string>
+    <string name="ano">Ano</string>
+    <string name="ex_ressonancia">Ex: Ressonância</string>
+    <string name="ex_olho">Ex: Olho</string>
+    <string name="ex_nome">Ex: Daniel Antonio</string>
+    <string name="ex_nutricionista">Ex: Nutricionista</string>
+    <string name="ex_telefone">Ex: (55) 99999–9999</string>
+    <string name="ex_cep">Ex: 80000–000</string>
+    <string name="ex_rua">Ex: Rua das flores</string>
+    <string name="ex_bairro">Ex: Centro</string>
+    <string name="ex_cidade">Ex: Curitiba</string>
+    <string name="ex_uf">Ex: PR</string>
+    <string name="ex_numero">Ex: 1000</string>
+    <string name="ex_nome_remedio">Ex: Dipirona</string>
+    <string name="ex_formato_remedio">Ex: Comprimido, gotas…</string>
+    <string name="ex_dosagem_remedio">Ex: 1g</string>
+    <string name="ex_quantidade_remedio">Ex: 12 gotas</string>
+
+
+</resources>
