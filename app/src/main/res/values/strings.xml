@@ -158,6 +158,8 @@
     <string name="texto_delMedico2">Esta ação é irreversivel e deletará todos os arquivos anexados a este médico!</string>
     <string name="titulo_delRemedio">Apagar remedio</string>
     <string name="texto_delRemedio">Você tem certeza que deseja apagar este remedio?</string>
+    <string name="titulo_voltarPagina">Cancelar</string>
+    <string name="texto_voltarPagina">Tem certeza que deseja cancelar?</string>
 
 
     <string name="hora_tomar">Hora de tomar</string>

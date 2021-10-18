@@ -158,6 +158,8 @@
     <string name="texto_delMedico2">This action is irreversible and will delete all files attached to this doctor!</string>
     <string name="titulo_delRemedio">Delete medicine</string>
     <string name="texto_delRemedio">Are you sure you want to delete this medicine?</string>
+    <string name="titulo_voltarPagina">Cancel</string>
+    <string name="texto_voltarPagina">Are you sure you want to cancel?</string>
 
 
 

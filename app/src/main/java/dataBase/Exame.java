@@ -12,6 +12,7 @@ public class Exame {
     int Ano;
     int idMedico;
     List<String> nomesImagens = new ArrayList<>();
+    List<Integer> idImagens = new ArrayList<>();
     int idUsuario;
 
     public int getId() {
@@ -73,9 +74,16 @@ public class Exame {
     public List<String> getNomesImagens() {
         return nomesImagens;
     }
-
     public void setNomesImagens(List<String> nomesImagens) {
         this.nomesImagens = nomesImagens;
+    }
+
+    public List<Integer> getIdImagens() {
+        return idImagens;
+    }
+
+    public void setIdImagens(List<Integer> idImagens) {
+        this.idImagens = idImagens;
     }
 
     public int getIdUsuario() {

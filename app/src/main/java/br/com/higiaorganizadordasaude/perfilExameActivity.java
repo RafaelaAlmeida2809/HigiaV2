@@ -114,7 +114,8 @@ public class perfilExameActivity extends AppCompatActivity {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
                             Intent data = result.getData();
-                            AtualizarTextPerfil();
+                            //AtualizarTextPerfil();
+                            ReiniciarAba();
                         }
                     }
                 });
@@ -133,6 +134,14 @@ public class perfilExameActivity extends AppCompatActivity {
         intent.putExtra("retorno","Voltei");
         setResult(RESULT_OK,intent);
         this.finish();
+    }
+    public void ReiniciarAba() {
+        Bundle bundle = new Bundle();
+        bundle.putString("idExame",idExame);
+        Intent thisActivity = new Intent(this, perfilExameActivity.class);
+        thisActivity.putExtras(bundle);
+        startActivity(thisActivity);
+        finish();
     }
 
     public void Modal(View v) {
@@ -336,11 +345,6 @@ public class perfilExameActivity extends AppCompatActivity {
                 listaBotoesImagens.add(b);
             }
         }
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int tamanhoWidth = ((displayMetrics.widthPixels*800)/1080);
-        int tamanhoHeight = ((displayMetrics.heightPixels*1200)/1920);
-        modalImagem.setLayoutParams(new ConstraintLayout.LayoutParams(tamanhoWidth, tamanhoHeight));
     }
 }
 

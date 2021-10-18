@@ -13,10 +13,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -96,6 +99,9 @@ public class LoguinActivity extends AppCompatActivity implements AdapterView.OnI
             }
         }
 
+        //Atualizar componente activity
+        regularTamanho();
+
         //Retorno
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -174,18 +180,27 @@ public class LoguinActivity extends AppCompatActivity implements AdapterView.OnI
         DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
         SQLiteDatabase db = DMOH.getReadableDatabase();
         DMOH.onUpgrade(db, 1, 1);
+        DMOH.close();
         //
         DadosExamesOpenHelper DEOH = new DadosExamesOpenHelper(getApplicationContext());
         SQLiteDatabase db2 = DEOH.getReadableDatabase();
         DEOH.onUpgrade(db2, 1, 1);
+        DEOH.close();
         //
         DadosRemediosOpenHelper DROH = new DadosRemediosOpenHelper(getApplicationContext());
         SQLiteDatabase db3 = DROH.getReadableDatabase();
         DROH.onUpgrade(db3, 1, 1);
+        DROH.close();
         //
         DadosConsultasOpenHelper DCOH = new DadosConsultasOpenHelper(getApplicationContext());
         SQLiteDatabase db4 = DCOH.getReadableDatabase();
         DCOH.onUpgrade(db4, 1, 1);
+        DCOH.close();
+        //
+        DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
+        SQLiteDatabase db5 = DUOH.getReadableDatabase();
+        DUOH.onUpgrade(db5, 1, 1);
+        DUOH.close();
     }
 
     @Override
@@ -227,6 +242,15 @@ public class LoguinActivity extends AppCompatActivity implements AdapterView.OnI
         Intent intent = new Intent(getApplicationContext(),LoguinActivity.class);
         finish();
         startActivity(intent);
+    }
+
+    public  void regularTamanho()
+    {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int tamanhoHigia = ((displayMetrics.heightPixels*550)/1920);
+        ImageView imagemHigia = findViewById(R.id.imagemHigia);
+        imagemHigia.setLayoutParams(new LinearLayout.LayoutParams(tamanhoHigia, tamanhoHigia));
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

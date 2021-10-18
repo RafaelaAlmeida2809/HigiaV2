@@ -1,13 +1,16 @@
 package br.com.higiaorganizadordasaude;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -301,7 +304,6 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
         adicionarMedicoActivity.putExtras(bundle);
         activityResultLauncher.launch(adicionarMedicoActivity);
     }
-
     public  void VoltarAbaAnterior(View v){
         if(!Ocupado) {
             Intent intent = new Intent();
@@ -410,12 +412,14 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
         int deletouImagens = 0;
         try {
             List<String> listaImagens = exame.getNomesImagens();
+            List<Integer> listaIdImagens = exame.getIdImagens();
             for (int i = 0; i < listaImagens.size(); i++) {
                 File f = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.pathSeparator + listaImagens.get(i));
                 Uri selectedImageUri = FileProvider.getUriForFile(this, getResources().getString(R.string.caminho_imagem), f);
                 File f2 = new File(selectedImageUri.getPath());
                 ContentResolver resolver = getApplicationContext().getContentResolver();
                 deletouImagens = resolver.delete(selectedImageUri,null,null);
+                DEOH.DeletaImagem(listaIdImagens.get(i),IdUsuarioAtual);
             }
             DEOH.close();
             return true;
@@ -441,31 +445,25 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
                 ListaImagensPhotos.add(b);
             }
         }
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int tamanhoWidth = ((displayMetrics.widthPixels*900)/1080);
-        int tamanhoHeight = ((displayMetrics.heightPixels*1400)/1920);
-        modalImagem.setLayoutParams(new ConstraintLayout.LayoutParams(tamanhoWidth, tamanhoHeight));
     }
-
     public void TrocarFocus(boolean bool){
-        textTipoExame.setSelected(bool);
+        textTipoExame.setFocusableInTouchMode(bool);
         textTipoExame.setFocusable(bool);
         //
-        textParteCorpo.setSelected(bool);
+        textParteCorpo.setFocusableInTouchMode(bool);
         textParteCorpo.setFocusable(bool);
         //
-        textDiaExame.setSelected(bool);
+        textDiaExame.setFocusableInTouchMode(bool);
         textDiaExame.setFocusable(bool);
         //
-        textAnoExame.setSelected(bool);
+        textAnoExame.setFocusableInTouchMode(bool);
         textAnoExame.setFocusable(bool);
         //
-        spinner.setSelected(bool);
-        spinner.setFocusable(bool);
+        spinner.setEnabled(bool);
+        spinner.setClickable(bool);
         //
-        spinnerMes.setSelected(bool);
-        spinnerMes.setFocusable(bool);
+        spinnerMes.setEnabled(bool);
+        spinnerMes.setClickable(bool);
     }
 
     public void AbrirImagem(View v){
@@ -484,7 +482,7 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
 
     public  void FecharModal(View v){
         modalImagem.setVisibility(View.INVISIBLE);
-        TrocarFocus(false);
+        TrocarFocus(true);
         Ocupado = false;
     }
 
@@ -499,16 +497,42 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
         quantidadeImagens = quantidadeImagens-1;
     }
 
-    public void ModalConfirmacao (View v){
+    public class RetornoPersonalizado extends Fragment {
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+                @Override
+                public void handleOnBackPressed() {
+                    ModalVoltar(null);
+                }
+            };
+            requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+        }
+    }
+    public void ModalVoltar(View v){
+        ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),false);
+    }
+    public void ModalExcluir(View v){
+        ModalConfirmacao(getResources().getString(R.string.titulo_excluir_Imagem),getResources().getString(R.string.texto_excluir_Imagem),true);
+    }
+    public void ModalConfirmacao (String titulo,String mensagem, boolean excluir){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
-        builder.setTitle(R.string.titulo_excluir_Imagem);
-        builder.setMessage(R.string.texto_excluir_Imagem);
+        builder.setTitle(titulo);
+        builder.setMessage(mensagem);
         builder.setPositiveButton(R.string.sim,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ExcluirFoto();
+                        if(excluir){
+                            ExcluirFoto();
+                        }
+                        else {
+                            VoltarAbaAnterior(null);
+                        }
                     }
                 });
         builder.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {

@@ -124,11 +124,12 @@ public class perfilMedicoActivity extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
-                            Intent data = result.getData();
-                            DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
-                            thisMedico = DMOH.BuscaMedico(Integer.parseInt(idMedico),IdUsuarioAtual);
-                            DMOH.close();
-                            AtualizarTextPerfil();
+                            //Intent data = result.getData();
+                            //DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
+                            //thisMedico = DMOH.BuscaMedico(Integer.parseInt(idMedico),IdUsuarioAtual);
+                            //DMOH.close();
+                            //AtualizarTextPerfil();
+                            ReiniciarAba();
                         }
                     }
                 });
@@ -147,6 +148,14 @@ public class perfilMedicoActivity extends AppCompatActivity {
         intent.putExtra("retorno","Voltei");
         setResult(RESULT_OK,intent);
         this.finish();
+    }
+    public void ReiniciarAba() {
+        Bundle bundle = new Bundle();
+        bundle.putString("idMedico",idMedico);
+        Intent thisActivity = new Intent(this, perfilMedicoActivity.class);
+        thisActivity.putExtras(bundle);
+        startActivity(thisActivity);
+        finish();
     }
 
     public void Modal(View v) {

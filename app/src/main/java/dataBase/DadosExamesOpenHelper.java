@@ -84,10 +84,11 @@ public class DadosExamesOpenHelper extends SQLiteOpenHelper {
     public void BuscaImagensExame(Exame exame, int idUsuarioAtual){
         SQLiteDatabase db = getReadableDatabase();
         //ordem pode ser ASC (A-Z) ou DESC (Z-A)
-        String sql = "SELECT nome FROM imagem_exame WHERE idExame = "+exame.getId()+ " AND idUsuario = " + idUsuarioAtual +  " ORDER BY id;";
+        String sql = "SELECT * FROM imagem_exame WHERE idExame = "+exame.getId()+ " AND idUsuario = " + idUsuarioAtual +  " ORDER BY id;";
         Cursor c = db.rawQuery(sql,null);
         while (c.moveToNext()){
             exame.getNomesImagens().add(c.getString(c.getColumnIndex("nome")));
+            exame.getIdImagens().add(c.getInt(c.getColumnIndex("id")));
         }
         db.close();
     }
@@ -116,6 +117,12 @@ public class DadosExamesOpenHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
         //db.close();
         sql = "DELETE FROM imagem_exame WHERE idExame = "+ id +" AND idUsuario = " + idUsuarioAtual + ";";
+        db.execSQL(sql);
+        db.close();
+    }
+    public void DeletaImagem(int id, int idUsuarioAtual){
+        SQLiteDatabase db = getReadableDatabase();
+        String sql = "DELETE FROM imagem_exame WHERE id = "+ id +" AND idUsuario = " + idUsuarioAtual + ";";
         db.execSQL(sql);
         db.close();
     }

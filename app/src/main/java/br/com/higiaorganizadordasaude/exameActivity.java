@@ -249,17 +249,12 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
             params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
             Button b = inflated.findViewById(R.id.buttonPerfil);
             b.setTag(exames.get(i).getId());
-            //int tamanho = b.getLayoutParams().width /2;
             TextView t1 = inflated.findViewById(R.id.textView1);
             t1.setText(exames.get(i).getTipo());
-            //t1.setLayoutParams(new RelativeLayout.LayoutParams(tamanho,t1.getLayoutParams().height));
             TextView t2 = inflated.findViewById(R.id.textView2 );
             t2.setText(exames.get(i).getParteCorpo());
-            //t2.setLayoutParams(new RelativeLayout.LayoutParams(tamanho,t2.getLayoutParams().height)));
             TextView t3 = inflated.findViewById(R.id.textView3 );
             t3.setText(((exames.get(i).getDia() == 0)? "":exames.get(i).getDia() + "/") + ((exames.get(i).getMes() == 0)? "":exames.get(i).getMes() + "/") + ((exames.get(i).getAno() == 0)? "":exames.get(i).getAno() ));
-            //t3.setLayoutParams(new RelativeLayout.LayoutParams(tamanho,t3.getLayoutParams().height)));
-            //Toast.makeText(this, tamanho + " " + t2.getLayoutParams().width, Toast.LENGTH_LONG).show();
         }
     }
 
