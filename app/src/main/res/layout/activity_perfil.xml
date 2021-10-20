@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/principal"
+    tools:context=".perfilActivity">
+    <ImageView
+        android:id="@+id/imagemFundo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="300px"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bordas_arredondadas_branco"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/button6"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="82dp"
+            android:layout_height="82dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@mipmap/ic_shortcut_arrow_back"
+            android:onClick="VoltarAba" />
+
+        <Button
+            android:id="@+id/button13"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="82dp"
+            android:layout_height="82dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@mipmap/ic_shortcut_settings"
+            android:onClick="Modal" />
+    </RelativeLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imagemPerfil"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:src="@drawable/common_full_open_on_phone"
+        app:civ_border_color="#4D7E33"
+        app:civ_border_width="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.062" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="220dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp">
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nome"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textNomeUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textEmailUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+        <Spinner
+            android:id="@id/spinnerLinguagem"
+            android:layout_width="300dp"
+            android:layout_height="34dp"
+            />
+
+    </LinearLayout>
+
+
+
+
+
+    <FrameLayout
+        android:layout_width="175dp"
+        android:layout_height="139dp"
+        android:id="@+id/imagemModal"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.932"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.143">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:rotation="180"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.936"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.143"
+            app:srcCompat="?android:attr/fastScrollPreviewBackgroundLeft" />
+
+        <Button
+            android:id="@+id/botaoModal1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="20dp"
+            android:translationZ="30dp"
+            android:background="#00FF0000"
+            android:onClick="AbrirModalDeslogar"
+            android:text="@string/deslogar_perfil"/>
+
+        <Button
+            android:id="@+id/botaoModal2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00FF0000"
+            android:onClick="AbrirModalDeletar"
+            android:text="@string/deletar_perfil"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="70dp"
+            android:translationZ="30dp" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
