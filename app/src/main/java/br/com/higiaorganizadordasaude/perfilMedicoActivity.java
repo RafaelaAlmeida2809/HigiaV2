@@ -50,11 +50,9 @@ import dataBase.Remedio;
 import dataBase.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class perfilMedicoActivity extends AppCompatActivity {
+public class perfilMedicoActivity extends AppCompatActivity implements MyInterface {
 
     ActivityResultLauncher<Intent> activityResultLauncher;
-    GoogleSignInAccount signInAccount;
-    private GoogleSignInClient mGoogleSignInClient;
     FrameLayout imagemModal;
     LinearLayout linearLayout;
     List<LinearLayout> listaLinearFilho = new ArrayList<>();
@@ -73,6 +71,7 @@ public class perfilMedicoActivity extends AppCompatActivity {
     List<ImageView> listaSeta = new ArrayList<>();
     int IdUsuarioAtual;
     String idMedico;
+    boolean segundo;
     Medico thisMedico;
 
     @Override
@@ -80,18 +79,11 @@ public class perfilMedicoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_medico);
 
-        // Logar Google.
-        createRequest();
-        signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
-        Usuario usuario = DUOH.BuscaUsuarioPeloEmail(signInAccount.getEmail());
-        if (signInAccount != null) {
-            IdUsuarioAtual = usuario.getId();
-        }
-        else {
-            Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
-            finish();
-            startActivity(LoguinActivity);
+        //Verificar Loguin
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        if(IdUsuarioAtual == -1){
+            AbrirLoguin();
         }
 
         // atribuindo Views
@@ -135,12 +127,10 @@ public class perfilMedicoActivity extends AppCompatActivity {
                 });
     }
 
-    public void createRequest() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    public void AbrirLoguin(){
+        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+        finish();
+        startActivity(LoguinActivity);
     }
 
     public void AbrirAbaMedico(View v) {
@@ -168,35 +158,25 @@ public class perfilMedicoActivity extends AppCompatActivity {
     }
 
     public  void AbrirModalDeletar(View v) {
-        ModalApagar(getResources().getString(R.string.titulo_delMedico1),getResources().getString(R.string.texto_delMedico1), true);
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_delMedico1),getResources().getString(R.string.texto_delMedico1),this,this);
     }
-
-    public void ModalApagar  (String Titulo, String Mensagem, boolean Primeiro) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(Titulo);
-        builder.setMessage(Mensagem);
-        builder.setPositiveButton(R.string.sim,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(Primeiro){
-                            ModalApagar(getResources().getString(R.string.titulo_delMedico2),getResources().getString(R.string.texto_delMedico2), false);
-                        }
-                        else {
-                            ApagarMedico();
-                        }
-                    }
-                });
-        builder.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+    public void RetornoModal(boolean resultado){
+        if(resultado) {
+            if(!segundo){
+                segundo = true;
+                FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+                funcao.ModalConfirmacao(getResources().getString(R.string.titulo_delMedico2),getResources().getString(R.string.texto_delMedico2),this,this);
             }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+            else {
+                segundo = false;
+                ApagarMedico();
+            }
+        }
+        else {
+            segundo = false;
+        }
     }
-
     public void ApagarMedico() {
         DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
         int deletouImagem = 0;
@@ -430,7 +410,7 @@ public class perfilMedicoActivity extends AppCompatActivity {
         perfilExameActivity.putExtras(bundle);
         activityResultLauncher.launch(perfilExameActivity);
     }
-    /*
+
     ///////////////////////////////////////////////////CODIGOS DO REMEDIO////////////////////////////////////////////////////////////
     public  void AtualizarBotoesAbaRemedios(String orderColuna, String ordem,LinearLayout LayoutButton, int idMedicoAberto){
         DadosRemediosOpenHelper DROH = new DadosRemediosOpenHelper(getApplicationContext());
@@ -474,7 +454,7 @@ public class perfilMedicoActivity extends AppCompatActivity {
         for (int i = 0; i < idConsultas.size(); i++) {
             Consulta consulta = DCOH.BuscaConsulta(idConsultas.get(i),IdUsuarioAtual);
             ViewStub stub = new ViewStub(this);
-            stub.setLayoutResource(R.layout.botao_consulta_completo);
+            stub.setLayoutResource(R.layout.botao_exame_completo);
             LayoutButton.addView(stub);
             View inflated = stub.inflate();
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) inflated.getLayoutParams();
@@ -502,7 +482,7 @@ public class perfilMedicoActivity extends AppCompatActivity {
         Intent perfilConsultaActivity = new Intent(this, perfilConsultaActivity.class);
         perfilConsultaActivity.putExtras(bundle);
         activityResultLauncher.launch(perfilConsultaActivity);
-    }*/
+    }
 
 }
 

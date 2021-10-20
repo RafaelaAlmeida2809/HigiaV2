@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -70,11 +72,9 @@ import dataBase.Medico;
 import dataBase.Usuario;
 
 
-public class adicionarMedicoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class adicionarMedicoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MyInterface  {
 
     ActivityResultLauncher<Intent> activityResultLauncher;
-    GoogleSignInAccount signInAccount;
-    private GoogleSignInClient mGoogleSignInClient;
     HashMap<String,String> dadosCEP = new HashMap<>();
     JSONObject jsonObjectBase = new JSONObject();
     EditText textoNomeRua;
@@ -103,18 +103,11 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adicionar_medico);
 
-        // Logar Google.
-        createRequest();
-        signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
-        Usuario usuario = DUOH.BuscaUsuarioPeloEmail(signInAccount.getEmail());
-        if (signInAccount != null) {
-            IdUsuarioAtual = usuario.getId();
-        }
-        else {
-            Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
-            finish();
-            startActivity(LoguinActivity);
+        //Verificar Loguin
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        if(IdUsuarioAtual == -1){
+            AbrirLoguin();
         }
 
         // atribuindo Views
@@ -200,19 +193,26 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                 });
     }
 
-    public void createRequest() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    public void AbrirLoguin(){
+        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+        finish();
+        startActivity(LoguinActivity);
     }
 
-    public  void VoltarAbaAnterior(View v){
+    public  void VoltarAbaAnterior(){
         Intent intent = new Intent();
         intent.putExtra("retorno","Voltei");
         setResult(RESULT_OK,intent);
         this.finish();
+    }
+    public void AbrirModalVoltar(View v){
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
+    }
+    public void RetornoModal(boolean resultado){
+        if(resultado) {
+            VoltarAbaAnterior();
+        }
     }
 
     public  void PegarFotoGaleria (View v) {
@@ -334,7 +334,7 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                     }
                     DMOH.close();
                     if(!ErroImagem) {
-                        VoltarAbaAnterior(null);
+                        VoltarAbaAnterior();
                     }
                 }
                 else
@@ -512,8 +512,10 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
         }
     }
 //////////////////////////////////////////FIM CEP///////////////////////////////////////////////////////////////
-
-
+    @Override
+    public void onBackPressed(){
+       AbrirModalVoltar(null);
+    }
 
 }
 

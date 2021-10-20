@@ -10,4 +10,6 @@
     <color name="transparente">#00FFFFFF</color>
     <color name="salvar">#74F17B</color>
     <color name="cancelar">#F17474</color>
+    <color name="Text">#000000</color>
+    <color name="obrigatorio">#ff0000</color>
 </resources>

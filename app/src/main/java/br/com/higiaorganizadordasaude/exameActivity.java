@@ -43,55 +43,39 @@ import dataBase.Usuario;
 public class exameActivity extends AppCompatActivity  implements AdapterView.OnItemSelectedListener{
 
     ActivityResultLauncher<Intent> activityResultLauncher;
+    CheckBox checkMedico;
+    Spinner spinner1;
+    Spinner spinner2;
     String colunaOrdenar;
     String ordemOrdenar;
     List<String> NomeMedicos = new ArrayList<>();
     List<Integer> IdMedicos = new ArrayList<>();
     List<LinearLayout> ListaLinearMedicos = new ArrayList<>();
     List<ImageView> ListaImageSeta = new ArrayList<>();
-    //List<RelativeLayout> ListaMedicosLayout = new ArrayList<>();   Tentar substituir as outras listas por essa;
     boolean abaMedicos = false;
-    CheckBox checkMedico;
     int IdUsuarioAtual;
-    GoogleSignInAccount signInAccount;
-    private GoogleSignInClient mGoogleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exame);
 
         //Verificar Loguin
-        createRequest();
-        signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
-        Usuario usuario = DUOH.BuscaUsuarioPeloEmail(signInAccount.getEmail());
-        if (signInAccount != null) {
-            IdUsuarioAtual = usuario.getId();
-        }
-        else {
-            Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
-            finish();
-            startActivity(LoguinActivity);
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        if(IdUsuarioAtual == -1){
+            AbrirLoguin();
         }
 
         // atribuindo Views
         checkMedico = findViewById(R.id.checkBoxMedico);
+        spinner1 = findViewById(R.id.spinnerExame1);
+        spinner2 = findViewById(R.id.spinnerExame2);
 
         //Carregar spinners
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        Spinner spinner1 = findViewById(R.id.spinnerExame1);
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,R.array.ordenar_Exame_Coluna,android.R.layout.simple_spinner_item);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner1.setAdapter(adapter1);
-        spinner1.setOnItemSelectedListener(this);
-        spinner1.getLayoutParams().width =  (displayMetrics.widthPixels/2)-40;
-        Spinner spinner2 = findViewById(R.id.spinnerExame2);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,R.array.ordenar_Ordem,android.R.layout.simple_spinner_item);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner2.setAdapter(adapter2);
-        spinner2.setOnItemSelectedListener(this);
-        spinner2.getLayoutParams().width =  (displayMetrics.widthPixels/2)-40;
+        funcao.CriarSpinner(this,spinner1,R.array.ordenar_Exame_Coluna,null);
+        funcao.CriarSpinner(this,spinner2,R.array.ordenar_Ordem,null);
+
 
         //Inicia os componentes da pagina
         AtualizarBotoes("tipo","ASC");
@@ -116,12 +100,10 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
                 });
     }
 
-    public void createRequest() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    public void AbrirLoguin(){
+        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+        finish();
+        startActivity(LoguinActivity);
     }
 
     public void AbrirAbaInicial(View v) {
@@ -137,7 +119,7 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
         activityResultLauncher.launch(adicionarExameActivity);
     }
 
-    public void AbrirAbaPerfilExame(View v)
+    public void AbrirAbaPerfil(View v)
     {
         Bundle bundle = new Bundle();
         bundle.putString("idExame",v.getTag().toString());

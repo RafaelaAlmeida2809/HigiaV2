@@ -63,7 +63,7 @@ import dataBase.Exame;
 import dataBase.Medico;
 import dataBase.Usuario;
 
-public class adicionarExameActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class adicionarExameActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MyInterface  {
 
     ActivityResultLauncher<Intent> activityResultLauncher;
     ScrollView scrollFundo;
@@ -90,29 +90,21 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
     boolean salvar;
     boolean buscandoPDF;
     boolean Ocupado;
+    boolean excluindo;
     List<String> nome_Medicos = new ArrayList();
     List<Integer> id_Medicos = new ArrayList();
     List<Button> ListaImagensPhotos = new ArrayList<>();
     List<Uri> photoUri = new ArrayList<>();
-    GoogleSignInAccount signInAccount;
-    private GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adicionar_exame);
 
-        // Logar Google.
-        createRequest();
-        signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
-        Usuario usuario = DUOH.BuscaUsuarioPeloEmail(signInAccount.getEmail());
-        if (signInAccount != null) {
-            IdUsuarioAtual = usuario.getId();
-        }
-        else {
-            Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
-            finish();
-            startActivity(LoguinActivity);
+        //Verificar Loguin
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        if(IdUsuarioAtual == -1){
+            AbrirLoguin();
         }
 
         // atribuindo Views
@@ -125,12 +117,8 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
         textNomePagina = findViewById(R.id.textNomePagina);
         scrollFundo = findViewById(R.id.scrollFundo);
         modalImagem = findViewById(R.id.modalImagem);
-
-        //Spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.meses_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMes.setAdapter(adapter);
-        spinnerMes.setOnItemSelectedListener(this);
+        //Carregar spinners
+        funcao.CriarSpinner(this,spinnerMes,R.array.meses_array,null);
 
         //Recebe idExame em caso de edição
         Bundle bundle = getIntent().getExtras();
@@ -191,13 +179,10 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
                     }
                 });
     }
-
-    public void createRequest() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    public void AbrirLoguin(){
+        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+        finish();
+        startActivity(LoguinActivity);
     }
 
     public void salvarImagens(int idExame){
@@ -290,10 +275,8 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
             id_Medicos.add(medicos.get(i).getId());
         }
         nome_Medicos.add(getResources().getString(R.string.adicione_medico));
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, nome_Medicos);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        funcao.CriarSpinner(this,spinner,-1,nome_Medicos);
         DMOH.close();
     }
 
@@ -497,51 +480,24 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
         quantidadeImagens = quantidadeImagens-1;
     }
 
-    public class RetornoPersonalizado extends Fragment {
-
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-                @Override
-                public void handleOnBackPressed() {
-                    ModalVoltar(null);
-                }
-            };
-            requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-        }
-    }
     public void ModalVoltar(View v){
-        ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),false);
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
     }
     public void ModalExcluir(View v){
-        ModalConfirmacao(getResources().getString(R.string.titulo_excluir_Imagem),getResources().getString(R.string.texto_excluir_Imagem),true);
+        excluindo = true;
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_excluir_Imagem),getResources().getString(R.string.texto_excluir_Imagem),this,this);
     }
-    public void ModalConfirmacao (String titulo,String mensagem, boolean excluir){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(titulo);
-        builder.setMessage(mensagem);
-        builder.setPositiveButton(R.string.sim,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(excluir){
-                            ExcluirFoto();
-                        }
-                        else {
-                            VoltarAbaAnterior(null);
-                        }
-                    }
-                });
-        builder.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+    public void RetornoModal(boolean resultado){
+       if(resultado) {
+           if (excluindo) {
+               ExcluirFoto();
+               excluindo = false;
+           } else {
+               VoltarAbaAnterior(null);
+           }
+       }
     }
 
     public  void RegularImagem(Button imagem){
@@ -574,6 +530,10 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+    @Override
+    public void onBackPressed(){
+        ModalVoltar(null);
     }
 }
 

@@ -63,7 +63,8 @@
         <item>en</item>
     </string-array>
 
-    <string name="higia_exames">Higia Exames</string>
+    <string name="higia_nome">Higia</string>
+    <string name="higia_complemento">Organizador da Saúde</string>
     <string name="bem_vindo">Bem vindo ao</string>
     <string name="mensagem_linguagem">Escolha a linguagem</string>
     <string name="Exames">Exames</string>
@@ -132,6 +133,8 @@
     <string name="deletar_remedio">Deletar Remedio</string>
     <string name="selecione_medico">Selecione um médico</string>
     <string name="adicione_medico">Adicionar novo médico</string>
+    <string name="deslogar_perfil">Deslogar perfil</string>
+    <string name="deletar_perfil">Deletar perfil</string>
 
 
     <string name="cancelar">Cancelar</string>
@@ -160,6 +163,11 @@
     <string name="texto_delRemedio">Você tem certeza que deseja apagar este remedio?</string>
     <string name="titulo_voltarPagina">Cancelar</string>
     <string name="texto_voltarPagina">Tem certeza que deseja cancelar?</string>
+    <string name="titulo_deslogarConta">Deslogar conta</string>
+    <string name="texto_deslogarConta">Você tem certeza que deseja deslogar?</string>
+    <string name="titulo_deletarConta">Deletar conta no aplicativo</string>
+    <string name="texto_deletarConta">Você tem certeza que deseja deletar essa conta?</string>
+    <string name="texto_deletarConta2">Esta ação é irreversivel e deletará todos os arquivos que não estiverem salvos em sua galeria</string>
 
 
     <string name="hora_tomar">Hora de tomar</string>

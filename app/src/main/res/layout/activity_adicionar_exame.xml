@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/AddExame"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/secundaria"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -65,7 +65,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginLeft="20dp"
                     android:text="@string/tipo_exame"
-                    android:textColor="#000000"
+                    android:textColor="@color/Text"
                     android:textSize="20sp"/>
             </RelativeLayout>
             <EditText
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/Obrigatorio"
-                android:textColor="#ff0000"
+                android:textColor="@color/obrigatorio"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:textSize="11sp"
@@ -101,7 +101,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginLeft="20dp"
                     android:text="@string/parte_do_corpo"
-                    android:textColor="#000000"
+                    android:textColor="@color/Text"
                     android:textSize="20sp" />
             </RelativeLayout>
 
@@ -120,7 +120,7 @@
                 android:text="@string/Obrigatorio"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
-                android:textColor="#ff0000"
+                android:textColor="@color/obrigatorio"
                 android:textSize="12sp"
                 />
             <RelativeLayout
@@ -138,7 +138,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginLeft="20dp"
                     android:text="@string/nome_do_medico"
-                    android:textColor="#000000"
+                    android:textColor="@color/Text"
                     android:textSize="20sp" />
             </RelativeLayout>
             <Spinner
@@ -150,7 +150,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/Obrigatorio"
-                android:textColor="#ff0000"
+                android:textColor="@color/obrigatorio"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:textSize="11sp"
@@ -169,7 +169,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:text="@string/data_do_exame"
-                    android:textColor="#000000"
+                    android:textColor="@color/Text"
                     android:textSize="20sp" />
             </RelativeLayout>
             <LinearLayout
@@ -216,7 +216,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:text="   Adicionar fotos dos exames:"
-                    android:textColor="#000000"
+                    android:textColor="@color/Text"
                     android:textSize="20sp" />
             </RelativeLayout>
             <LinearLayout
@@ -261,7 +261,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:scaleType="fitCenter"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                     <Button
                         android:tag="99"
                         android:id="@+id/imagePhoto2"
@@ -269,7 +269,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:layout_marginLeft="5dp"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                     <Button
                         android:tag="99"
                         android:id="@+id/imagePhoto3"
@@ -277,7 +277,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:layout_marginLeft="5dp"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                     <Button
                         android:tag="99"
                         android:id="@+id/imagePhoto4"
@@ -285,7 +285,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:layout_marginLeft="5dp"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/LayoutHorizontal2"
@@ -301,7 +301,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:scaleType="fitCenter"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                     <Button
                         android:tag="99"
                         android:id="@+id/imagePhoto6"
@@ -309,7 +309,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:layout_marginLeft="5dp"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                     <Button
                         android:tag="99"
                         android:id="@+id/imagePhoto7"
@@ -317,7 +317,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:layout_marginLeft="5dp"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                     <Button
                         android:tag="99"
                         android:id="@+id/imagePhoto8"
@@ -325,7 +325,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:layout_marginLeft="5dp"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/LayoutHorizontal3"
@@ -341,7 +341,7 @@
                         android:layout_height="1dp"
                         android:scaleType="fitCenter"
                         android:onClick="AbrirImagem"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                     <Button
                         android:tag="99"
                         android:id="@+id/imagePhoto10"
@@ -349,7 +349,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:layout_marginLeft="5dp"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                     <Button
                         android:tag="99"
                         android:id="@+id/imagePhoto11"
@@ -357,7 +357,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:layout_marginLeft="5dp"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                     <Button
                         android:tag="99"
                         android:id="@+id/imagePhoto12"
@@ -365,7 +365,7 @@
                         android:layout_height="1dp"
                         android:onClick="AbrirImagem"
                         android:layout_marginLeft="5dp"
-                        android:background="#ffffff"/>
+                        android:background="@color/secundaria"/>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout

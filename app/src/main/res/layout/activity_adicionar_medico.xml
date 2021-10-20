@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/AddMedico"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/secundaria"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -71,7 +71,7 @@
                             android:layout_marginTop="3dp"
                             android:layout_marginLeft="20dp"
                             android:text="@string/foto_do_medico"
-                            android:textColor="#000000"
+                            android:textColor="@color/Text"
                             android:textSize="20sp" />
                     </RelativeLayout>
                     <LinearLayout
@@ -114,7 +114,7 @@
                             android:layout_marginTop="3dp"
                             android:layout_marginLeft="20dp"
                             android:text="@string/nome_do_medico"
-                            android:textColor="#000000"
+                            android:textColor="@color/Text"
                             android:textSize="20sp" />
                     </RelativeLayout>
                     <EditText
@@ -130,7 +130,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Obrigatorio"
-                        android:textColor="#ff0000"
+                        android:textColor="@color/obrigatorio"
                         android:textSize="11dp"
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="10dp"
@@ -150,7 +150,7 @@
                             android:layout_marginTop="3dp"
                             android:text="@string/especialidade"
                             android:layout_marginLeft="20dp"
-                            android:textColor="#000000"
+                            android:textColor="@color/Text"
                             android:textSize="20sp" />
                     </RelativeLayout>
 
@@ -167,7 +167,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Obrigatorio"
-                        android:textColor="#ff0000"
+                        android:textColor="@color/obrigatorio"
                         android:textSize="11sp"
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="10dp"/>
@@ -186,7 +186,7 @@
                             android:layout_marginTop="3dp"
                             android:layout_marginLeft="20dp"
                             android:text="@string/telefone"
-                            android:textColor="#000000"
+                            android:textColor="@color/Text"
                             android:textSize="20sp" />
                     </RelativeLayout>
 
@@ -232,7 +232,7 @@
                             android:layout_marginTop="3dp"
                             android:layout_marginLeft="20dp"
                             android:text="@string/endereco"
-                            android:textColor="#000000"
+                            android:textColor="@color/Text"
                             android:textSize="20sp" />
                     </RelativeLayout>
 
@@ -247,7 +247,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/cep"
-                            android:textColor="#000000"
+                            android:textColor="@color/Text"
                             android:textSize="20sp" />
 
                         <EditText
@@ -278,7 +278,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rua/Av:"
-                            android:textColor="#000000"
+                            android:textColor="@color/Text"
                             android:textSize="20sp"/>
 
                         <EditText
@@ -301,7 +301,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/bairro"
-                            android:textColor="#000000"
+                            android:textColor="@color/Text"
                             android:textSize="20sp"/>
 
                         <EditText
@@ -324,7 +324,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/cidade"
-                            android:textColor="#000000"
+                            android:textColor="@color/Text"
                             android:textSize="20sp"/>
                         <EditText
                             android:id="@+id/textCidade"
@@ -345,7 +345,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/uf"
-                        android:textColor="#000000"
+                        android:textColor="@color/Text"
                         android:textSize="20sp" />
                     <EditText
                         android:id="@+id/textEstado"
@@ -360,7 +360,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/numero"
-                        android:textColor="#000000"
+                        android:textColor="@color/Text"
                         android:textSize="20sp" />
                     <EditText
                         android:id="@+id/textNumero"
@@ -417,7 +417,7 @@
                                 android:layout_width="140dp"
                                 android:layout_height="50dp"
                                 android:background="@drawable/botao_cancelar"
-                                android:onClick="VoltarAbaAnterior"
+                                android:onClick="AbrirModalVoltar"
                                 android:text="@string/Cancelar"
                                 android:gravity="center"
                                 app:layout_constraintBottom_toBottomOf="parent"
@@ -428,6 +428,7 @@
                             <Button
                                 android:layout_width="48dp"
                                 android:layout_height="48dp"
+                                android:onClick="AbrirModalVoltar"
                                 android:background="@mipmap/ic_shortcut_cancel"
                                 app:layout_constraintBottom_toBottomOf="@+id/button10"
                                 app:layout_constraintEnd_toEndOf="@+id/button10"

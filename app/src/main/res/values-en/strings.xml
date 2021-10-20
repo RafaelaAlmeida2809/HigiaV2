@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HigiaExames</string>
+    <string name="app_name">Higia - Health Organizer</string>
     <string name="caminho_imagem">br.com.higiaorganizadordasaude.provider</string>
     <string-array name="meses_array">
         <item>Month</item>
@@ -62,8 +62,8 @@
         <item>pt</item>
         <item>en</item>
     </string-array>
-
-    <string name="higia_exames">Higia Exames</string>
+    <string name="higia_nome">Higia</string>
+    <string name="higia_complemento">Health Organizer</string>
     <string name="bem_vindo">Welcome to</string>
     <string name="mensagem_linguagem">Choose the language</string>
     <string name="Exames">Exams</string>
@@ -132,6 +132,8 @@
     <string name="deletar_remedio">Delete medicine</string>
     <string name="selecione_medico">Select a doctor</string>
     <string name="adicione_medico">Add new doctor</string>
+    <string name="deslogar_perfil">Logout profile</string>
+    <string name="deletar_perfil">Delete profile</string>
 
 
     <string name="cancelar">Cancel</string>
@@ -160,6 +162,13 @@
     <string name="texto_delRemedio">Are you sure you want to delete this medicine?</string>
     <string name="titulo_voltarPagina">Cancel</string>
     <string name="texto_voltarPagina">Are you sure you want to cancel?</string>
+    <string name="titulo_deslogarConta">Logout account</string>
+    <string name="texto_deslogarConta">Are you sure you want to log out?</string>
+    <string name="titulo_deletarConta">Delete account in app</string>
+    <string name="texto_deletarConta">Are you sure you want to delete this account?</string>
+    <string name="texto_deletarConta2">This action is irreversible and will delete all files that are not saved in your gallery</string>
+
+
 
 
 

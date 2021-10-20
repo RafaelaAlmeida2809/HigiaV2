@@ -82,13 +82,11 @@ public class LoguinActivity extends AppCompatActivity implements AdapterView.OnI
 
         // atribuindo Views
         botaoLogarGoogle = findViewById(R.id.google_singIn);
+        spinnerLinguagem =findViewById(R.id.spinnerLinguagem);
 
         //Carregar spinners
-        spinnerLinguagem =findViewById(R.id.spinnerLinguagem);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.linguagens, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLinguagem.setAdapter(adapter);
-        spinnerLinguagem.setOnItemSelectedListener(this);
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        funcao.CriarSpinner(this,spinnerLinguagem,R.array.linguagens,null);
 
         //Atualizar Linguagem
         String[] siglaLinguagem = getResources().getStringArray(R.array.linguagenSigla);

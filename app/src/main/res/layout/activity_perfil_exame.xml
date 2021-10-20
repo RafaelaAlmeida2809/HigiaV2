@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/Exame"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/secundaria"
             android:textSize="25sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -112,7 +112,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginStart="20dp"
                     android:text="@string/tipo_exame"
-                    android:textColor="#000000"
+                    android:textColor="@color/Text"
                     android:textSize="20sp"/>
             </RelativeLayout>
             <TextView
@@ -138,7 +138,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginStart="20dp"
                     android:text="@string/parte_do_corpo"
-                    android:textColor="#000000"
+                    android:textColor="@color/Text"
                     android:textSize="20sp"/>
             </RelativeLayout>
             <TextView
@@ -164,7 +164,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginStart="20dp"
                     android:text="@string/medico"
-                    android:textColor="#000000"
+                    android:textColor="@color/Text"
                     android:textSize="20sp"/>
             </RelativeLayout>
             <LinearLayout
@@ -203,7 +203,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginStart="20dp"
                     android:text="@string/data"
-                    android:textColor="#000000"
+                    android:textColor="@color/Text"
                     android:textSize="20sp"/>
             </RelativeLayout>
             <TextView
@@ -230,7 +230,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginStart="20dp"
                     android:text="@string/imagens"
-                    android:textColor="#000000"
+                    android:textColor="@color/Text"
                     android:textSize="20sp"/>
             </RelativeLayout>
 
@@ -399,7 +399,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparente"
-            android:onClick="ModalApagar"
+            android:onClick="AbrirModalDeletar"
             android:text="@string/deletar_exame"
             android:layout_marginStart="22dp"
             android:layout_marginTop="70dp"

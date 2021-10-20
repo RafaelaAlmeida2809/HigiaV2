@@ -54,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Verificar Loguin
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        if(IdUsuarioAtual == -1){
+            AbrirLoguin();
+        }
+
         // atribuindo Views
         textNomeUsuario = findViewById(R.id.textNomeUsuario);
         imagemPerfil = findViewById(R.id.imagemPerfil);
@@ -61,20 +68,6 @@ public class MainActivity extends AppCompatActivity {
         imagemHigia = findViewById(R.id.imagemHigia);
         imagemFundo = findViewById(R.id.imagemFundo);
 
-        //Verificar Loguin
-        createRequest();
-        signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
-        usuarioAtual = DUOH.BuscaUsuarioPeloEmail(signInAccount.getEmail());
-        if (usuarioAtual.getEmail() != null || usuarioAtual.getEmail().length() > 0) {
-            IdUsuarioAtual = usuarioAtual.getId();
-        }
-        else {
-            Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
-            finish();
-            startActivity(LoguinActivity);
-        }
-        DUOH.close();
 
         //Inicia os componentes da pagina.
         regularTamanho();
@@ -100,12 +93,10 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    public void createRequest() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    public void AbrirLoguin(){
+        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+        finish();
+        startActivity(LoguinActivity);
     }
 
     public void ReinicarActivity(){
@@ -133,7 +124,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void AbrirAbaConsultas(View v){
-        Toast.makeText(getApplicationContext(), "Ainda em desenvolvimento", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getApplicationContext(), "Ainda em desenvolvimento", Toast.LENGTH_SHORT).show();
+        Intent exameActivity = new Intent(this,consultaActivity.class);
+        startActivity(exameActivity);
     }
 
     public void AbrirAbaRemedio(View v){

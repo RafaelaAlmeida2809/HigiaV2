@@ -28,12 +28,58 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".perfilMedicoActivity"></activity>
-        <activity android:name=".adicionarMedicoActivity" />
-        <activity android:name=".perfilExameActivity" />
-        <activity android:name=".adicionarExameActivity" />
-        <activity android:name=".medicoActivity" />
-        <activity android:name=".exameActivity" />
+        <activity android:name=".perfilRemedioActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".adicionarRemedioActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".remedioActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".perfilConsultaActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".consultaActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".adicionarConsultaActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".perfilActivity"
+            android:screenOrientation="portrait"/>
+        <!--
+        -<activity
+            android:name=".UninstallIntentActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.DELETE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="package"  />
+            </intent-filter>
+
+
+
+        </activity>
+        -->
+        <activity
+            android:name=".perfilMedicoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".adicionarMedicoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".perfilExameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".adicionarExameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".medicoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exameActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LoguinActivity"
             android:screenOrientation="portrait">

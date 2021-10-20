@@ -47,11 +47,9 @@ import dataBase.Exame;
 import dataBase.Medico;
 import dataBase.Usuario;
 
-public class perfilExameActivity extends AppCompatActivity {
+public class perfilExameActivity extends AppCompatActivity implements MyInterface {
 
     ActivityResultLauncher<Intent> activityResultLauncher;
-    private GoogleSignInClient mGoogleSignInClient;
-    GoogleSignInAccount signInAccount;
     FrameLayout imagemModal;
     RelativeLayout modalImagem;
     TextView tipoExame;
@@ -73,19 +71,11 @@ public class perfilExameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_exame);
 
-        // Logar Google.
-        createRequest();
-        signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
-        Usuario usuario = DUOH.BuscaUsuarioPeloEmail(signInAccount.getEmail());
-        if (signInAccount != null) {
-            nomeUsuario = signInAccount.getDisplayName()+"";
-            IdUsuarioAtual = usuario.getId();
-        }
-        else {
-            Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
-            finish();
-            startActivity(LoguinActivity);
+        //Verificar Loguin
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        if(IdUsuarioAtual == -1){
+            AbrirLoguin();
         }
 
         // atribuindo Views
@@ -121,12 +111,10 @@ public class perfilExameActivity extends AppCompatActivity {
                 });
     }
 
-    public void createRequest() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    public void AbrirLoguin(){
+        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+        finish();
+        startActivity(LoguinActivity);
     }
 
     public void AbrirAbaExame(View v) {
@@ -152,27 +140,16 @@ public class perfilExameActivity extends AppCompatActivity {
             imagemModal.setVisibility(View.INVISIBLE);
         }
     }
-
-    public void ModalApagar (View v){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(R.string.titulo_delExame);
-        builder.setMessage(R.string.texto_delExame);
-        builder.setPositiveButton(R.string.sim,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ApagarExame();
-                    }
-                });
-        builder.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+    public  void AbrirModalDeletar(View v) {
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_delExame),getResources().getString(R.string.texto_delExame),this,this);
     }
+    public void RetornoModal(boolean resultado){
+        if(resultado) {
+            ApagarExame();
+        }
+    }
+
     public void ApagarExame() {
         DadosExamesOpenHelper DEOH = new DadosExamesOpenHelper(getApplicationContext());
         Exame exame = DEOH.BuscaExame(Integer.parseInt(idExame),IdUsuarioAtual);

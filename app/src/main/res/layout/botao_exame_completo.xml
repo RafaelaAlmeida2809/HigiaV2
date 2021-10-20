@@ -22,7 +22,7 @@
             android:layout_height="50dp"
             android:tag="1"
             android:background="@drawable/botao_base"
-            android:onClick="AbrirAbaPerfilExame"/>
+            android:onClick="AbrirAbaPerfil"/>
         <LinearLayout
             android:id="@+id/wrapper"
             android:layout_width="match_parent"

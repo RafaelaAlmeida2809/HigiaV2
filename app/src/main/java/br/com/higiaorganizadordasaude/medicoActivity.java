@@ -38,8 +38,8 @@ import dataBase.Usuario;
 public class medicoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     ActivityResultLauncher<Intent> activityResultLauncher;
-    GoogleSignInAccount signInAccount;
-    private GoogleSignInClient mGoogleSignInClient;
+    Spinner spinner1;
+    Spinner spinner2;
     int PosicaoSpinner;
     int IdUsuarioAtual;
     String colunaOrdenar;
@@ -50,34 +50,18 @@ public class medicoActivity extends AppCompatActivity implements AdapterView.OnI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medico);
         //Verificar Loguin
-        createRequest();
-        signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
-        Usuario usuario = DUOH.BuscaUsuarioPeloEmail(signInAccount.getEmail());
-        if (signInAccount != null) {
-            IdUsuarioAtual = usuario.getId();
+        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        if(IdUsuarioAtual == -1){
+            AbrirLoguin();
         }
-        else {
-            Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
-            finish();
-            startActivity(LoguinActivity);
-        }
+        // atribuindo Views
+        spinner1 = findViewById(R.id.spinnerMedico1);
+        spinner2 = findViewById(R.id.spinnerMedico2);
 
         //Carregar spinners
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        Spinner spinner = findViewById(R.id.spinnerMedico1);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.ordenar_Medicos,android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-        spinner.getLayoutParams().width = displayMetrics.widthPixels/2;
-        Spinner spinner2 = findViewById(R.id.spinnerMedico2);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,R.array.ordenar_Ordem,android.R.layout.simple_spinner_item);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner2.setAdapter(adapter2);
-        spinner2.setOnItemSelectedListener(this);
-        spinner2.getLayoutParams().width = displayMetrics.widthPixels/2;
+        funcao.CriarSpinner(this,spinner1,R.array.ordenar_Medicos,null);
+        funcao.CriarSpinner(this,spinner2,R.array.ordenar_Ordem,null);
 
         //Inicia os componentes da pagina
         AtualizarBotoes("nome","ASC");
@@ -96,12 +80,10 @@ public class medicoActivity extends AppCompatActivity implements AdapterView.OnI
                 });
     }
 
-    public void createRequest() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    public void AbrirLoguin(){
+        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+        finish();
+        startActivity(LoguinActivity);
     }
 
     public void AbrirAbaInicial(View v){
