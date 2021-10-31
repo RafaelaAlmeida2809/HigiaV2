@@ -135,6 +135,12 @@
     <string name="adicione_medico">Adicionar novo médico</string>
     <string name="deslogar_perfil">Deslogar perfil</string>
     <string name="deletar_perfil">Deletar perfil</string>
+    <string name="erro_salvarImagem">Erro ao salvar imagem</string>
+    <string name="erro_internet">Erro ao logar, verifique sua conexão de internet</string>
+    <string name="erro_fire">Erro ao logar, servidor fora do ar</string>
+    <string name="cep_incorreto">Cep Incorreto</string>
+
+
 
 
     <string name="cancelar">Cancelar</string>
@@ -142,6 +148,7 @@
     <string name="nao">Não</string>
     <string name="aguarde">Aguarde…</string>
     <string name="carregando">Carregando…</string>
+    <string name="carregando_cep">Carregando CEP…</string>
     <string name="erro_conexao">Erro ao conectar com o servidor, verifique sua conexão com a internet</string>
     <string name="titulo_linguagem">Mudar linguagem</string>
     <string name="texto_linguagem">Você tem certeza que deseja mudar a linguagem?</string>

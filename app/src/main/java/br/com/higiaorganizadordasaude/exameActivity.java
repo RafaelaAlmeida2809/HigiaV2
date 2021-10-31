@@ -5,29 +5,21 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
 import dataBase.Exame;
-import dataBase.Remedio;
 
 public class exameActivity extends AppCompatActivity  implements AdapterView.OnItemSelectedListener,MyInterface{
 
@@ -111,23 +103,11 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
         this.finish();
     }
 
-    public void AbrirAbaAdicionarExame(View v)
-    {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idExame",null);
-        Intent adicionarExameActivity = new Intent(this, adicionarExameActivity.class);
-        adicionarExameActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarExameActivity);*/
+    public void AbrirAbaAdicionarExame(View v){
         activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarExameActivity.class,"idExame",null));
     }
 
-    public void AbrirAbaPerfilExame(View v)
-    {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idExame",);
-        Intent perfilExameActivity = new Intent(this, perfilExameActivity.class);
-        perfilExameActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilExameActivity);*/
+    public void AbrirAbaPerfilExame(View v){
         activityResultLauncher.launch(funcoes.BundleActivy(this,perfilExameActivity.class,"idExame",v.getTag().toString()));
     }
 
@@ -145,24 +125,6 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
                 int idMedicoAtual = DMOH.buscaIdMedico("nome", "'"+NomeMedicos.get(i)+"'", "ASC",IdUsuarioAtual).get(0);
                 funcoes.CriarExpansorMedico(this,LayoutButton,idMedicoAtual,NomeMedicos.get(i),ListaLinearMedicos,ListaImageSeta);
                 IdMedicos.add(idMedicoAtual);
-                /*ViewStub stub = new ViewStub(this);
-                stub.setLayoutResource(R.layout.expansor_layout);
-                LayoutButton.addView(stub);
-                View inflated = stub.inflate();
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) inflated.getLayoutParams();
-                params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
-                Button b = inflated.findViewById(R.id.buttonExpandir);
-                //b.setTag(DMOH.buscaIdMedicoString("nome", NomeMedicos.get(i), "ASC").get(0));
-                b.setTag(idMedicoAtual);
-                ImageView imageView = inflated.findViewById(R.id.imagemExpandir);
-                LinearLayout linearLayout = inflated.findViewById(R.id.LayoutButtonExame);
-                linearLayout.setVisibility(View.INVISIBLE);
-                TextView t1 = inflated.findViewById(R.id.textView1);
-                t1.setText(NomeMedicos.get(i));
-                ListaLinearMedicos.add(linearLayout);
-                ListaImageSeta.add(imageView);
-                IdMedicos.add(idMedicoAtual);*/
-                //IdMedicos.add(DMOH.buscaIdMedicoString("nome", NomeMedicos.get(i), "ASC").get(0));
             }
             abaMedicos = true;
         }
@@ -199,7 +161,6 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
 
     public  void AtualizarBotoesAbaMedicos(String orderColuna, String ordem,LinearLayout LayoutButton, int idMedicoAberto){
         DadosExamesOpenHelper DEOH = new DadosExamesOpenHelper(getApplicationContext());
-        //List<Integer> idExames = DEOH.buscaIdExamesInt("idMedico",idMedicoAberto,ordem);
         List<Integer> idExames = DEOH.buscaIdExames("idMedico",idMedicoAberto+"",ordem,IdUsuarioAtual);
         LayoutButton.removeAllViews();
         for(int i = 0; i<idExames.size(); i++)
@@ -211,14 +172,12 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
         }
     }
 
-    public  void AtualizarBotoes(String orderColuna, String ordem)
-    {
+    public  void AtualizarBotoes(String orderColuna, String ordem) {
         DadosExamesOpenHelper DEOH = new DadosExamesOpenHelper(getApplicationContext());
         List<Exame> exames = DEOH.BuscaExames(orderColuna,ordem,IdUsuarioAtual);
         LinearLayout LayoutButton = findViewById(R.id.LayoutButton);
         LayoutButton.removeAllViews();
-        for(int i = 0; i<exames.size(); i++)
-        {
+        for(int i = 0; i<exames.size(); i++){
             funcoes.CriarBotoes(this,LayoutButton,exames.get(i).getId(),exames.get(i).getTipo(),
                     exames.get(i).getParteCorpo(),((exames.get(i).getDia() == 0)? "":exames.get(i).getDia() + "/") + ((exames.get(i).getMes() == 0)? "":exames.get(i).getMes() + "/") + ((exames.get(i).getAno() == 0)? "":exames.get(i).getAno() )
             ,R.layout.botao_exame_completo);
@@ -229,16 +188,13 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
         if(parent.getId() == R.id.spinnerExame1 ) {
-            if(position == 0)
-            {
+            if(position == 0){
                 colunaOrdenar = "tipo";
             }
-            else if (position == 1)
-            {
+            else if (position == 1){
                 colunaOrdenar = "parteCorpo";
             }
-            else
-            {
+            else{
                 colunaOrdenar = "ano,mes,dia";
             }
         }

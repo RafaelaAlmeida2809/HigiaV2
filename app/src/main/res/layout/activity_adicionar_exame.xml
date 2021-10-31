@@ -235,12 +235,6 @@
                     android:layout_marginLeft="60dp"
                     android:background="@mipmap/ic_shortcut_add_photo_alternate2"
                     android:onClick="AbrirGaleria"/>
-                <Button
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginLeft="60dp"
-                    android:background="@mipmap/ic_shortcut_picture_as_pdf"
-                    android:onClick="AbrirGaleriaPDF"/>
 
             </LinearLayout>
             <LinearLayout

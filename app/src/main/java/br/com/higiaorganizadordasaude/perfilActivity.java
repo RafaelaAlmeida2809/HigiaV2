@@ -1,6 +1,5 @@
 package br.com.higiaorganizadordasaude;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
@@ -15,14 +14,10 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-
 import java.io.File;
 import java.util.List;
-
 import dataBase.DadosConsultasOpenHelper;
 import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
@@ -36,11 +31,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class perfilActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,MyInterface {
     TextView textNomeUsuario;
     TextView textEmailUsuario;
-    ActivityResultLauncher<Intent> activityResultLauncher;
     GoogleSignInAccount signInAccount;
     CircleImageView imagemPerfil;
     FrameLayout imagemModal;
-    private GoogleSignInClient mGoogleSignInClient;
     int IdUsuarioAtual;
     Spinner spinnerLinguagem;
     int linguaremEscolhida;
@@ -84,18 +77,21 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
         finish();
         startActivity(LoginActivity);
     }
+
     public void VoltarAba(View v){
         finish();
     }
-    public void AbrirModalDeslogar (View v)
-    {
+
+    public void AbrirModalDeslogar (View v){
         retorno = "deslogar";
         funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_deslogarConta),getResources().getString(R.string.texto_deslogarConta), this, this);
     }
+
     public  void AbrirModalDeletar(View v) {
         retorno = "deletar";
         funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_deletarConta),getResources().getString(R.string.texto_deletarConta), this, this);
     }
+
     public void RetornoModal(boolean resultado){
         if(resultado) {
             if(retorno.equals("deslogar")) {
@@ -122,8 +118,8 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
                     MudarIdioma("en");
                 }
             }
-
         }
+
         else {
             if(retorno.equals("linguagem")) {
                 mudarLinguagem = false;
@@ -135,7 +131,8 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void DeletarTudo()
-    {// Deleta os exames
+    {
+        // Deleta os exames
         DadosExamesOpenHelper DEOH = new DadosExamesOpenHelper(getApplicationContext());
         List<Exame> exames = DEOH.BuscaExames("idMedico","ASC",IdUsuarioAtual);
         int deletouImagens = 0;
@@ -181,6 +178,7 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
         }
         Deslogar ();
     }
+
     public void Modal(View v) {
         if (imagemModal.getVisibility() == View.INVISIBLE) {
             imagemModal.setVisibility(View.VISIBLE);
@@ -188,12 +186,14 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
             imagemModal.setVisibility(View.INVISIBLE);
         }
     }
+
     public void Deslogar (){
         funcoes.DeslogarGoogle(this);
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
         startActivity(intent);
     }
+
     public void MudarIdioma (String linguagem){
         funcoes.MudarIdioma(linguagem,this.getResources());
         DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
@@ -203,6 +203,7 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
         finish();
         startActivity(intent);
     }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();

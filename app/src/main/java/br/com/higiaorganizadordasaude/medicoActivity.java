@@ -5,7 +5,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.List;
 import dataBase.DadosMedicosOpenHelper;
 import dataBase.Medico;
@@ -87,21 +85,10 @@ public class medicoActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void AbrirAbaAdicionarMedico(View v) {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idMedico",null);
-        Intent adicionarMedicoActivity = new Intent(this, adicionarMedicoActivity.class);
-        adicionarMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarMedicoActivity);*/
         activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarMedicoActivity.class,"idMedico",null));
     }
 
     public  void AbrirAbaPerfilMedico(View v){
-        //Codigo responsavel por enviar os dados e instanciar a nova Activity
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idMedico",v.getTag().toString());
-        Intent perfilMedicoActivity = new Intent(this, perfilMedicoActivity.class);
-        perfilMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilMedicoActivity);*/
         activityResultLauncher.launch(funcoes.BundleActivy(this,perfilMedicoActivity.class,"idMedico",v.getTag().toString()));
     }
 
@@ -110,8 +97,7 @@ public class medicoActivity extends AppCompatActivity implements AdapterView.OnI
         List<Medico> medicos = DMOH.BuscaMedicos(orderColuna,ordem,IdUsuarioAtual);
         LinearLayout LayoutButton = findViewById(R.id.LayoutButton);
         LayoutButton.removeAllViews();
-        for(int i = 0; i<medicos.size(); i++)
-        {
+        for(int i = 0; i<medicos.size(); i++){
             ViewStub stub = new ViewStub(this);
             stub.setLayoutResource(R.layout.botao_medico_completo);
             LayoutButton.addView(stub);
@@ -132,21 +118,17 @@ public class medicoActivity extends AppCompatActivity implements AdapterView.OnI
         String text = parent.getItemAtPosition(position).toString();
         PosicaoSpinner = position;
         if(parent.getId() == R.id.spinnerMedico1 ) {
-            if(position == 0)
-            {
+            if(position == 0){
                 colunaOrdenar = "nome";
             }
-            else if (position == 1)
-            {
+            else if (position == 1){
                 colunaOrdenar = "dosagem";
             }
-            else
-            {
+            else{
                 colunaOrdenar = "formato";
             }
         }
-        else if(parent.getId() == R.id.spinnerMedico2 )
-        {
+        else if(parent.getId() == R.id.spinnerMedico2 ){
             if (position == 0) {
                 ordemOrdenar = "ASC";
             } else {

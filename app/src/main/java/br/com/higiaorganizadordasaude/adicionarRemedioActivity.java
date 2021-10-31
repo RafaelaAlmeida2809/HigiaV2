@@ -5,7 +5,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -19,16 +18,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-
 import dataBase.DadosMedicosOpenHelper;
 import dataBase.DadosRemediosOpenHelper;
 import dataBase.Medico;
@@ -176,6 +171,7 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
         nome_Medicos.add(getResources().getString(R.string.adicione_medico));
         funcoes.CriarSpinner(this,spinner,-1,nome_Medicos);
     }
+
     public void RetornoModal(boolean resultado){
         if(resultado) {
             if(acao.equals("Despertador")){
@@ -197,25 +193,23 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
             }
         }
     }
+
     public void ModalVoltar(View v){
         acao="Voltar";
         funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
     }
 
     public void AbrirAbaAdicionarMedico() {
-        Bundle bundle = new Bundle();
-        bundle.putString("idMedico",null);
-        Intent adicionarMedicoActivity = new Intent(this, adicionarMedicoActivity.class);
-        adicionarMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarMedicoActivity);
+        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarMedicoActivity.class,"idMedico",null));
     }
-    public  void VoltarAbaAnterior()
-    {
+
+    public  void VoltarAbaAnterior(){
         Intent intent = new Intent();
         intent.putExtra("retorno","Voltei");
         setResult(RESULT_OK,intent);
         this.finish();
     }
+
     public void CarregarRemedio(){
         funcaoRecebida = "Editar";
         textNomePagina.setText(getResources().getString(R.string.editar_remedio));
@@ -232,12 +226,22 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
         spinnerMesFim.setSelection(remedio.getMesFim());
         textAnoFim.setText(remedio.getAnoFim()+"");
         textHorario1.setText(remedio.getHorario1());
-        textHorario2.setText(remedio.getHorario2());
-        textHorario3.setText(remedio.getHorario3());
-        textHorario4.setText(remedio.getHorario4());
+        if(!remedio.getHorario2().equals("")) {
+            textHorario2.setText(remedio.getHorario2());
+            AdicionarNovoHorario(null);
+        }
+        if(!remedio.getHorario3().equals("")) {
+            textHorario3.setText(remedio.getHorario3());
+            AdicionarNovoHorario(null);
+        }
+        if(!remedio.getHorario4().equals("")) {
+            textHorario4.setText(remedio.getHorario4());
+            AdicionarNovoHorario(null);
+        }
         textQuantidadeRemedio.setText(remedio.getQuantidade());
         DROH.close();
     }
+
     public void AdicionarNovoRemedio(View v) {
         String nomeRemedio = textNomeRemedio.getText().toString().trim();
         String dosagemRemedio = textDosagemRemedio.getText().toString().trim();
@@ -249,7 +253,6 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
                     (textDiaFim.getText().toString().isEmpty() || Integer.parseInt(textDiaFim.getText().toString()) <= Integer.parseInt(Dias[mesFim]))) {
                 if ((textAnoInicio.getText().toString().isEmpty() || (Integer.parseInt(textAnoInicio.getText().toString()) < 2100 && Integer.parseInt(textAnoInicio.getText().toString()) > 1900)) &&
                         (textAnoFim.getText().toString().isEmpty() || (Integer.parseInt(textAnoFim.getText().toString()) < 2100 && Integer.parseInt(textAnoFim.getText().toString()) > 1900))) {
-
                     DadosRemediosOpenHelper DROH = new DadosRemediosOpenHelper(getApplicationContext());
                     Remedio remedio = new Remedio();
                     remedio.setNome(textNomeRemedio.getText().toString());
@@ -278,7 +281,6 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
                     } else {
                         remedio.setAnoFim(0);
                     }
-
                     if (!textHorario1.getText().toString().isEmpty()) {
                         remedio.setHorario1(textHorario1.getText().toString());
                         listaHoras.add(textHorario1.getText().toString());
@@ -309,7 +311,6 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
                         remedio.setQuantidade("");
                     }
                     remedio.setIdMedico(idMedico);
-
                     if (funcaoRecebida == "Editar") {
                         DROH.EditarRemedio(Integer.parseInt(idRemedio), remedio, IdUsuarioAtual);
 
@@ -335,6 +336,7 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
             Toast.makeText(getApplicationContext(), R.string.campo_obrigatorio, Toast.LENGTH_SHORT).show();
         }
     }
+
     public void AbrirRelogio(View v) {
         Button b = findViewById(v.getId());
         timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
@@ -342,12 +344,13 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
         }, 0, 0, true);
         timePickerDialog.show();
     }
+
     public void AdicionarDespertador(int i){
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
         String[] Hora = listaHoras.get(i).split(":");
         ArrayList<Integer> dias = new ArrayList<Integer>();
         Collections.addAll(dias,Calendar.SUNDAY,Calendar.MONDAY,Calendar.TUESDAY,Calendar.WEDNESDAY,Calendar.THURSDAY,Calendar.FRIDAY,Calendar.SATURDAY);
-        intent.putExtra(AlarmClock.EXTRA_DAYS,Integer.parseInt(Hora[0]));
+        intent.putExtra(AlarmClock.EXTRA_DAYS,dias);
         intent.putExtra(AlarmClock.EXTRA_HOUR,Integer.parseInt(Hora[0]));
         intent.putExtra(AlarmClock.EXTRA_MINUTES,Integer.parseInt(Hora[1]));
         intent.putExtra(AlarmClock.EXTRA_MESSAGE,R.string.hora_tomar + " " + textNomeRemedio.getText() +" "+ textDosagemRemedio.getText() +" "+textFormatoRemedio.getText());
@@ -361,10 +364,9 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
         else {
             VoltarAbaAnterior();
         }
-
     }
-    public void DeletarDespertador(int i){
 
+    public void DeletarDespertador(int i){
         Intent intent = new Intent(AlarmClock.ACTION_DISMISS_ALARM);
         DadosRemediosOpenHelper DROH = new DadosRemediosOpenHelper(getApplicationContext());
         Remedio remedio = DROH.BuscaRemedio(Integer.parseInt(idRemedio.trim()),IdUsuarioAtual);
@@ -376,45 +378,39 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
         startActivity(intent);
     }
 
-    public void AdicionarNovoHorario(View v)
-    {
+    public void AdicionarNovoHorario(View v){
         HorariosVisiveis += 1;
-        if(HorariosVisiveis == 2)
-        {
+        if(HorariosVisiveis == 2){
             textHorario2.setVisibility(View.VISIBLE);
             botaoHorario1.setVisibility(View.INVISIBLE);
             botaoHorario2.setVisibility(View.VISIBLE);
             botaoHorario2Menos.setVisibility(View.VISIBLE);
         }
-        else if(HorariosVisiveis == 3)
-        {
+        else if(HorariosVisiveis == 3){
             textHorario3.setVisibility(View.VISIBLE);
             botaoHorario2.setVisibility(View.INVISIBLE);
             botaoHorario2Menos.setVisibility(View.INVISIBLE);
             botaoHorario3.setVisibility(View.VISIBLE);
             botaoHorario3Menos.setVisibility(View.VISIBLE);
         }
-        else if(HorariosVisiveis == 4)
-        {
+        else if(HorariosVisiveis == 4){
             textHorario4.setVisibility(View.VISIBLE);
             botaoHorario3.setVisibility(View.INVISIBLE);
             botaoHorario3Menos.setVisibility(View.INVISIBLE);
             botaoHorario4Menos.setVisibility(View.VISIBLE);
         }
     }
-    public void RemoverNovoHorario(View v)
-    {
+
+    public void RemoverNovoHorario(View v){
         HorariosVisiveis -= 1;
-        if(HorariosVisiveis == 1)
-        {
+        if(HorariosVisiveis == 1){
             textHorario2.setVisibility(View.INVISIBLE);
             textHorario2.setText("");
             botaoHorario1.setVisibility(View.VISIBLE);
             botaoHorario2.setVisibility(View.INVISIBLE);
             botaoHorario2Menos.setVisibility(View.INVISIBLE);
         }
-        else if(HorariosVisiveis == 2)
-        {
+        else if(HorariosVisiveis == 2){
             textHorario3.setVisibility(View.INVISIBLE);
             textHorario3.setText("");
             botaoHorario2.setVisibility(View.VISIBLE);
@@ -422,8 +418,7 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
             botaoHorario3Menos.setVisibility(View.INVISIBLE);
             botaoHorario2Menos.setVisibility(View.VISIBLE);
         }
-        else if(HorariosVisiveis == 3)
-        {
+        else if(HorariosVisiveis == 3){
             textHorario4.setVisibility(View.INVISIBLE);
             textHorario4.setText("");
             botaoHorario3.setVisibility(View.VISIBLE);
@@ -431,6 +426,7 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
             botaoHorario3Menos.setVisibility(View.VISIBLE);
         }
     }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
@@ -441,12 +437,10 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
                 idMedico = id_Medicos.get(position);
             }
         }
-        else if(parent.getId() == R.id.spinnerMesInicio)
-        {
+        else if(parent.getId() == R.id.spinnerMesInicio){
             mesInicio = position;
         }
-        else if(parent.getId() == R.id.spinnerMesFim)
-        {
+        else if(parent.getId() == R.id.spinnerMesFim){
             mesFim = position;
         }
         Toast.makeText(parent.getContext(),text,Toast.LENGTH_SHORT);

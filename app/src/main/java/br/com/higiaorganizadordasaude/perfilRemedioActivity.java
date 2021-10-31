@@ -4,16 +4,12 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import dataBase.DadosMedicosOpenHelper;
 import dataBase.DadosRemediosOpenHelper;
 import dataBase.Medico;
@@ -86,6 +82,7 @@ public class perfilRemedioActivity extends AppCompatActivity implements MyInterf
                     }
                 });
     }
+
     public void AbrirLogin(){
         Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
@@ -98,6 +95,7 @@ public class perfilRemedioActivity extends AppCompatActivity implements MyInterf
         setResult(RESULT_OK,intent);
         this.finish();
     }
+
     public void Modal(View v) {
         if (imagemModal.getVisibility() == View.INVISIBLE) {
             imagemModal.setVisibility(View.VISIBLE);
@@ -105,17 +103,18 @@ public class perfilRemedioActivity extends AppCompatActivity implements MyInterf
             imagemModal.setVisibility(View.INVISIBLE);
         }
     }
-    public void ModalApagar (View v)
-    {
+
+    public void ModalApagar (View v){
         funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_delRemedio),getResources().getString(R.string.texto_delRemedio),this,this);
     }
+
     public void RetornoModal(boolean resultado) {
         if (resultado) {
             ApagarRemedio();
         }
     }
-    public void ApagarRemedio()
-    {
+
+    public void ApagarRemedio(){
         DadosRemediosOpenHelper DROH = new DadosRemediosOpenHelper(getApplicationContext());
         DROH.DeletaRemedio(Integer.parseInt(idRemedio),IdUsuarioAtual);
         finish();
@@ -125,24 +124,16 @@ public class perfilRemedioActivity extends AppCompatActivity implements MyInterf
         startActivity(funcoes.BundleActivy(this,perfilRemedioActivity.class,"idRemedio",idRemedio));
         finish();
     }
+
     public void EditarRemedio(View v) {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idRemedio",idRemedio);
-        Intent adicionarRemedioActivity = new Intent(this, adicionarRemedioActivity.class);
-        adicionarRemedioActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarRemedioActivity);*/
         activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarRemedioActivity.class,"idRemedio",idRemedio));
     }
+
     public void AbrirPerfilMedico (View v){
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idMedico",idMedico);
-        Intent perfilMedicoActivity = new Intent(this, perfilMedicoActivity.class);
-        perfilMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilMedicoActivity);*/
         activityResultLauncher.launch(funcoes.BundleActivy(this,perfilMedicoActivity.class,"idMedico",idMedico));
     }
-    public  void AtualizarTextPerfil()
-    {
+
+    public  void AtualizarTextPerfil(){
         DadosRemediosOpenHelper DROH = new DadosRemediosOpenHelper(getApplicationContext());
         Remedio remedio = DROH.BuscaRemedio(Integer.parseInt(idRemedio),IdUsuarioAtual);
         idMedico = remedio.getIdMedico()+"";

@@ -32,11 +32,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import dataBase.DadosUsuariosOpenHelper;
+import dataBase.Medico;
 import dataBase.Usuario;
 
 public class FuncoesCompartilhadas {
@@ -152,131 +154,25 @@ public class FuncoesCompartilhadas {
     public Intent BundleActivy(Context context,Class<?> c,String nome,String valor){
         Bundle bundle = new Bundle();
         bundle.putString(nome,valor);
-        Intent adicionarExameActivity = new Intent(context, c);
-        adicionarExameActivity.putExtras(bundle);
-        return adicionarExameActivity;
+        Intent novaActivity = new Intent(context, c);
+        novaActivity.putExtras(bundle);
+        return novaActivity;
     }
-    public static String getPathFromUri(final Context context, final Uri uri) {
-
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
-        // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-
-                // TODO handle non-primary volumes
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
-                        split[1]
-                };
-
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
-        }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
-
-            // Return the remote address
-            if (isGooglePhotosUri(uri))
-                return uri.getLastPathSegment();
-
-            return getDataColumn(context, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
+    public Intent AbrirGoogleMaps(Medico thisMedico){
+        String urlMap = "https://www.google.com/maps/search/" +((thisMedico.getCep()==0)? "":thisMedico.getCep())
+                + ((thisMedico.getLogradouro()=="")? "":"+_+" + thisMedico.getLogradouro())
+                + ((thisMedico.getBairro()=="")? "":"+_+" + thisMedico.getBairro())
+                + ((thisMedico.getCidade()=="")? "":"+_+" + thisMedico.getCidade())
+                + ((thisMedico.getEstado()=="")? "":"+_+" + thisMedico.getEstado())
+                + ((thisMedico.getNumero()==0)? "":"+_+" + thisMedico.getNumero());
+        urlMap.replace(" ","+");
+        urlMap.replace("ç","c");
+        urlMap = Normalizer.normalize(urlMap, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+        Uri uriMap = Uri.parse(urlMap);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, uriMap);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        return mapIntent;
     }
 
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
-
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {
-                column
-        };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is DownloadsProvider.
-     */
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is MediaProvider.
-     */
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is Google Photos.
-     */
-    public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
 
 }

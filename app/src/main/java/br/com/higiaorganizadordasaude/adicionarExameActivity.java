@@ -7,15 +7,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-
-import android.Manifest;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -23,9 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,25 +26,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
 import dataBase.Exame;
@@ -81,8 +69,6 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
     boolean BuscandoImagem;
     boolean TirandoImagem;
     boolean AdicionandoMedico;
-    boolean salvar;
-    boolean buscandoPDF;
     boolean Ocupado;
     boolean excluindo;
     List<String> nome_Medicos = new ArrayList();
@@ -165,147 +151,16 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
                                 quantidadeImagens++;
                                 BuscandoImagem = false;
                             }
-                            else if(buscandoPDF)
-                            {
-                                Uri uri = data.getData();
-
-                                String uriString = uri.getPath();
-                                Toast.makeText(getApplicationContext(),"1   "+uriString, Toast.LENGTH_SHORT).show();
-                                String stringUriPdf="";
-                                stringUriPdf = funcoes.getPathFromUri(getApplicationContext(),uri);
-                                try{
-                                    File f = new File(stringUriPdf);
-                                    Uri teste = Uri.fromFile(f);
-                                    Toast.makeText(getApplicationContext(),"2   "+teste.getPath(), Toast.LENGTH_SHORT).show();
-
-                                    Toast.makeText(getApplicationContext(),"3   "+f.getPath(), Toast.LENGTH_SHORT).show();
-                                } catch (Exception e) {
-                                    Toast.makeText(getApplicationContext(),"erro3", Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-
-
-                                try{
-                                    //abrirPdf(uri);
-                                } catch (Exception e) {
-                                    Toast.makeText(getApplicationContext(),"erro1", Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-
-                                Uri arquivo= null;
-                                boolean a=false;
-                                boolean b=false;
-                                boolean c=false;
-                                try{
-
-                                     uriString = uri.toString();
-                                    File myFile = new File(uriString);
-                                    arquivo = Uri.fromFile(myFile);
-                                    Toast.makeText(getApplicationContext(),"4   "+myFile.getPath(), Toast.LENGTH_SHORT).show();
-                                    c=true;
-                                }catch (Exception e) {
-                                    Toast.makeText(getApplicationContext(), "erronovo1", Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                 }
-                                if(c) {
-                                    try {
-
-                                        abrirPdf(arquivo);
-                                    } catch (Exception e) {
-                                        Toast.makeText(getApplicationContext(), "erronovo2", Toast.LENGTH_SHORT).show();
-                                        e.printStackTrace();
-                                    }
-                                }
-                                /*try{
-                                    File f = new File(uriString);
-                                    arquivo = Uri.fromFile(f);
-                                    c=true;
-                                }catch (Exception e) {
-                                    Toast.makeText(getApplicationContext(), "erronovo1", Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-                                if(c) {
-                                    try {
-                                        abrirPdf(arquivo);
-                                    } catch (Exception e) {
-                                        Toast.makeText(getApplicationContext(), "erronovo2", Toast.LENGTH_SHORT).show();
-                                        e.printStackTrace();
-                                    }
-                                }
-                                try{
-                                    FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-                                     stringUriPdf = funcao.getPathFromUri(getApplicationContext(),uri);
-                                    Toast.makeText(getApplicationContext(),stringUriPdf, Toast.LENGTH_SHORT).show();
-                                    a=true;
-                                } catch (Exception e) {
-                                    Toast.makeText(getApplicationContext(),"erro2", Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-                                if(a){
-                                    try{
-                                        File f = new File(stringUriPdf);
-                                        arquivo = Uri.fromFile(f);
-                                        b=true;
-                                    } catch (Exception e) {
-                                        Toast.makeText(getApplicationContext(),"erro3", Toast.LENGTH_SHORT).show();
-                                        e.printStackTrace();
-                                    }
-                                }
-                                if(b) {
-                                    try {
-                                        abrirPdf(arquivo);
-                                    } catch (Exception e) {
-                                        Toast.makeText(getApplicationContext(), "erro4", Toast.LENGTH_SHORT).show();
-                                        e.printStackTrace();
-                                    }
-                                }*/
-
-                                //String uriString = uri.toString();
-                                //abrirPdf(uriString);
-
-                                //String uriString = uri.toString();
-                                //File myFile = new File(uriString);
-                                //String path = myFile.getAbsolutePath();
-                                //getPath(getApplicationContext(),uri );
-                                try{
-                                    InputStream inputStream = getContentResolver().openInputStream(uri);
-                                }
-                                catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-
-                                String displayName = "";
-
-
-                                /*ListaImagensPhotos.get(quantidadeImagens).setBackgroundResource(R.mipmap.higia_logo);
-                                RegularImagem(ListaImagensPhotos.get(quantidadeImagens));
-                                Toast.makeText(getApplicationContext(),"3"+ displayName, Toast.LENGTH_SHORT).show();
-                                photoUri.add(Uri.parse(displayName));
-                                quantidadeImagens++;
-                                buscandoPDF = false;
-
-                                abrirPdf(myFile);*/
-                            }
                             else if(AdicionandoMedico){
                                 AtualizarMedicos();
                                 AdicionandoMedico = false;
                             }
                         }
-                        buscandoPDF = false;
                         TirandoImagem = false;
                         BuscandoImagem = false;
                         AdicionandoMedico = false;
-                        buscandoPDF=false;
                     }
                 });
-    }
-    public void abrirPdf(Uri uri){
-        Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
-        pdfIntent.setDataAndType(uri,"application/pdf");
-        pdfIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(Intent.createChooser(pdfIntent, "escolha"));
-
-
     }
     public void AbrirLogin(){
         Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
@@ -321,7 +176,6 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
                     try {
                         photoFile = createImageFile();
                     } catch (IOException ex) {
-
                     }
                     BitmapDrawable bitmapDrawable = (BitmapDrawable) ListaImagensPhotos.get(i).getBackground();
                     Bitmap bitmap = bitmapDrawable.getBitmap();
@@ -333,9 +187,6 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-            else {
-                //Salvar PDF aqui
             }
         }
     }
@@ -362,31 +213,7 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
         DEOH.BuscaImagensExame(exame,IdUsuarioAtual);
         List<String> listaImagens = exame.getNomesImagens();
         for (int i = 0; i < listaImagens.size(); i++){
-            if(!listaImagens.get(i).toLowerCase().contains("pdf")) {
-                try {
-                    File f = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.pathSeparator + listaImagens.get(i));
-                    Uri selectedImageUri = FileProvider.getUriForFile(this, getResources().getString(R.string.caminho_imagem), f);
-                    InputStream inputStream;
-                    try {
-                        inputStream = getContentResolver().openInputStream(selectedImageUri);
-                        Bitmap plantPicture = BitmapFactory.decodeStream(inputStream);
-                        BitmapDrawable bitDraw = new BitmapDrawable(getApplicationContext().getResources(), plantPicture);
-                        ListaImagensPhotos.get(i).setBackground(bitDraw);
-                        RegularImagem(ListaImagensPhotos.get(i));
-                        quantidadeImagens++;
-                        photoUri.add(null);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "erro1", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "erro2", Toast.LENGTH_SHORT).show();
-                }
-            }
-            else {
                 photoUri.add(Uri.parse(listaImagens.get(i)));
-            }
         }
     }
 
@@ -408,12 +235,9 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
     }
 
     public void AbrirAbaAdicionarMedico() {
-        Bundle bundle = new Bundle();
-        bundle.putString("idMedico",null);
-        Intent adicionarMedicoActivity = new Intent(this, adicionarMedicoActivity.class);
-        adicionarMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarMedicoActivity);
+        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarMedicoActivity.class,"idMedico",null));
     }
+
     public  void VoltarAbaAnterior(View v){
         if(!Ocupado) {
             Intent intent = new Intent();
@@ -498,16 +322,6 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
                 BuscandoImagem = true;
                 activityResultLauncher.launch(Intent.createChooser(intentGaleria, "Select Picture"));
             }
-        }
-    }
-
-    public void AbrirGaleriaPDF(View v){
-        if(!Ocupado) {
-            Intent intentPDF = new Intent(Intent.ACTION_GET_CONTENT);
-            intentPDF.addCategory(Intent.CATEGORY_OPENABLE);
-            intentPDF.setType("application/pdf");
-            buscandoPDF = true;
-            activityResultLauncher.launch(Intent.createChooser(intentPDF, "Select Picture"));
         }
     }
 
@@ -614,10 +428,12 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
     public void ModalVoltar(View v){
         funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
     }
+
     public void ModalExcluir(View v){
         excluindo = true;
         funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_excluir_Imagem),getResources().getString(R.string.texto_excluir_Imagem),this,this);
     }
+
     public void RetornoModal(boolean resultado){
        if(resultado) {
            if (excluindo) {
@@ -660,6 +476,7 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
     @Override
     public void onBackPressed(){
         ModalVoltar(null);

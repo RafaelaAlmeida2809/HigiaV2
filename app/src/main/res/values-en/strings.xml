@@ -134,6 +134,10 @@
     <string name="adicione_medico">Add new doctor</string>
     <string name="deslogar_perfil">Logout profile</string>
     <string name="deletar_perfil">Delete profile</string>
+    <string name="erro_salvarImagem">Error to save image</string>
+    <string name="erro_internet">Login error, check your internet connection</string>
+    <string name="erro_fire">Login error, server down</string>
+    <string name="cep_incorreto">Incorrect Zip Code</string>
 
 
     <string name="cancelar">Cancel</string>
@@ -141,6 +145,7 @@
     <string name="nao">No</string>
     <string name="aguarde">Wait…</string>
     <string name="carregando">Loading…</string>
+    <string name="carregando_cep">Loading Zip code…</string>
     <string name="erro_conexao">Error connecting to server, check your internet connection</string>
     <string name="titulo_linguagem">Change linguage</string>
     <string name="texto_linguagem">Are you sure you want to change the language?</string>

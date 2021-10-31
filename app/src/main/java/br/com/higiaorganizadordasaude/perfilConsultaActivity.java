@@ -5,17 +5,12 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
-import java.text.Normalizer;
-
 import dataBase.Consulta;
 import dataBase.DadosConsultasOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
@@ -33,6 +28,7 @@ public class perfilConsultaActivity extends AppCompatActivity implements MyInter
     int IdUsuarioAtual;
     Medico thisMedico;
     FuncoesCompartilhadas funcoes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,11 +71,13 @@ public class perfilConsultaActivity extends AppCompatActivity implements MyInter
                     }
                 });
     }
+
     public void AbrirLogin(){
         Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
         startActivity(LoginActivity);
     }
+
     public void AbrirAbaConsulta(View v) {
         Intent intent = new Intent();
         intent.putExtra("retorno","Voltei");
@@ -94,64 +92,43 @@ public class perfilConsultaActivity extends AppCompatActivity implements MyInter
             imagemModal.setVisibility(View.INVISIBLE);
         }
     }
+
     public void AbrirModalApagar(View v){
         FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
         funcao.ModalConfirmacao(getResources().getString(R.string.titulo_delConsulta),getResources().getString(R.string.texto_delConsulta),this,this);
     }
+
     public void RetornoModal(boolean resultado){
         if(resultado) {
             ApagarConsulta();
         }
     }
 
-    public void ApagarConsulta()
-    {
+    public void ApagarConsulta(){
         DadosConsultasOpenHelper DCOH = new DadosConsultasOpenHelper(getApplicationContext());
         DCOH.DeletaConsulta(Integer.parseInt(idConsulta),IdUsuarioAtual);
         DCOH.close();
         AbrirAbaConsulta(null);
     }
+
     public void ReiniciarAba() {
         startActivity(funcoes.BundleActivy(this,perfilConsultaActivity.class,"idConsulta",idConsulta));
         finish();
     }
-    public void EditarConsulta(View v)
-    {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idConsulta",idConsulta);
-        Intent adicionarConsultaActivity = new Intent(this, adicionarConsultaActivity.class);
-        adicionarConsultaActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarConsultaActivity);*/
+
+    public void EditarConsulta(View v){
         activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarConsultaActivity.class,"idConsulta",idConsulta));
     }
+
     public void AbrirPerfilMedico (View v){
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idMedico",idMedico);
-        Intent perfilMedicoActivity = new Intent(this, perfilMedicoActivity.class);
-        perfilMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilMedicoActivity);*/
         activityResultLauncher.launch(funcoes.BundleActivy(this,perfilMedicoActivity.class,"idMedico",idMedico));
     }
-    public void AbrirGoogleMaps(View v)
-    {
 
-        //https://www.google.com/maps/dir abre o modo rota
-        String urlMap = "https://www.google.com/maps/search/" +((thisMedico.getCep()==0)? "":thisMedico.getCep())
-                + ((thisMedico.getLogradouro()=="")? "":"+_+" + thisMedico.getLogradouro())
-                + ((thisMedico.getBairro()=="")? "":"+_+" + thisMedico.getBairro())
-                + ((thisMedico.getCidade()=="")? "":"+_+" + thisMedico.getCidade())
-                + ((thisMedico.getEstado()=="")? "":"+_+" + thisMedico.getEstado())
-                + ((thisMedico.getNumero()==0)? "":"+_+" + thisMedico.getNumero());
-        urlMap.replace(" ","+");
-        urlMap.replace("ç","c");
-        urlMap = Normalizer.normalize(urlMap, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
-        Uri uriMap = Uri.parse(urlMap);
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, uriMap);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
+    public void AbrirGoogleMaps(View v){
+        startActivity(funcoes.AbrirGoogleMaps(thisMedico));
     }
-    public  void AtualizarTextPerfil()
-    {
+
+    public  void AtualizarTextPerfil(){
         DadosConsultasOpenHelper DCOH = new DadosConsultasOpenHelper(getApplicationContext());
         Consulta consulta = DCOH.BuscaConsulta(Integer.parseInt(idConsulta),IdUsuarioAtual);
         idMedico = consulta.getIdMedico()+"";

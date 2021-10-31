@@ -17,12 +17,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.squareup.picasso.Picasso;
-
 import dataBase.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -64,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements MyInterface {
         imagemHigia = findViewById(R.id.imagemHigia);
         imagemFundo = findViewById(R.id.imagemFundo);
 
-
         //Inicia os componentes da pagina.
         regularTamanho();
         if (signInAccount != null) {
@@ -73,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements MyInterface {
             Uri imageUri =  signInAccount.getPhotoUrl();
             Picasso.with(this).load(imageUri).fit().placeholder(R.mipmap.ic_launcher_round).into(imagemPerfil);
         }
+
         //Retorno
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -137,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements MyInterface {
     public void ModalDeslogar (View v) {
         funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_deslogarConta),getResources().getString(R.string.texto_deslogarConta), this, this);
     }
+
     public void RetornoModal(boolean resultado) {
         if (resultado) {
             funcoes.DeslogarGoogle(this);
@@ -145,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements MyInterface {
             startActivity(intent);
         }
     }
+
     public  void regularTamanho()
     {
         DisplayMetrics displayMetrics = new DisplayMetrics();

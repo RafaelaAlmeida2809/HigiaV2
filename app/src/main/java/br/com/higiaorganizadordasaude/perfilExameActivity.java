@@ -6,7 +6,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -24,13 +23,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
 import dataBase.Exame;
@@ -115,12 +112,8 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
         setResult(RESULT_OK,intent);
         this.finish();
     }
+
     public void ReiniciarAba() {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idExame",idExame);
-        Intent thisActivity = new Intent(this, perfilExameActivity.class);
-        thisActivity.putExtras(bundle);
-        startActivity(thisActivity);*/
         startActivity(funcoes.BundleActivy(this,perfilExameActivity.class,"idExame",idExame));
         finish();
     }
@@ -133,9 +126,11 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
             imagemModal.setVisibility(View.INVISIBLE);
         }
     }
+
     public  void AbrirModalDeletar(View v) {
         funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_delExame),getResources().getString(R.string.texto_delExame),this,this);
     }
+
     public void RetornoModal(boolean resultado){
         if(resultado) {
             ApagarExame();
@@ -148,7 +143,6 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
         DEOH.BuscaImagensExame(exame,IdUsuarioAtual);
         int deletouImagens = 0;
         try {
-
             List<String> listaImagens = exame.getNomesImagens();
             for (int i = 0; i < listaImagens.size(); i++) {
                 if(!listaImagens.get(i).toLowerCase().contains("pdf")) {
@@ -170,21 +164,11 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
     }
 
     public void AbrirPerfilMedico (View v){
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idMedico",idMedico);
-        Intent perfilMedicoActivity = new Intent(this, perfilMedicoActivity.class);
-        perfilMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilMedicoActivity);*/
         activityResultLauncher.launch(funcoes.BundleActivy(this,perfilMedicoActivity.class,"idMedico",idMedico));
     }
-    public void EditarExame(View v) {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idExame",idExame);
-        Intent adicionarExameActivity = new Intent(this, adicionarExameActivity.class);
-        adicionarExameActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarExameActivity);*/
-        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarExameActivity.class,"idExame",idExame));
 
+    public void EditarExame(View v) {
+        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarExameActivity.class,"idExame",idExame));
     }
 
     public void AbrirImagem(View v) {
@@ -197,14 +181,12 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
                 imagemModal.setBackground(bitmapDrawable);
                 if( fotoAbertaAtual == 0 ) {
                     botaoEsquerdo.setVisibility(View.INVISIBLE);
-                }
-                else {
+                }else {
                     botaoEsquerdo.setVisibility(View.VISIBLE);
                 }
                 if(fotoAbertaAtual == quantidadeImagens -1){
                     botaoDireito.setVisibility(View.INVISIBLE);
-                }
-                else {
+                }else {
 
                     botaoDireito.setVisibility(View.VISIBLE);
                 }
@@ -226,19 +208,15 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
         imagemModal.setBackground(bitmapDrawable);
         if((fotoAbertaAtual + valorBotao) <=0 ) {
             botaoEsquerdo.setVisibility(View.INVISIBLE);
-        }
-        else {
+        }else {
             botaoEsquerdo.setVisibility(View.VISIBLE);
         }
         if((fotoAbertaAtual + valorBotao) >= (quantidadeImagens -1)){
             botaoDireito.setVisibility(View.INVISIBLE);
-        }
-        else {
-
+        }else {
             botaoDireito.setVisibility(View.VISIBLE);
         }
         fotoAbertaAtual = fotoAbertaAtual+ valorBotao;
-
     }
 
     public  void Compartilhar(View v) {

@@ -5,26 +5,19 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import dataBase.Consulta;
 import dataBase.DadosConsultasOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
@@ -55,7 +48,6 @@ public class consultaActivity extends AppCompatActivity  implements AdapterView.
         funcoes = new FuncoesCompartilhadas();
 
         //Verificar Login
-
         IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
             AbrirLogin();
@@ -78,12 +70,7 @@ public class consultaActivity extends AppCompatActivity  implements AdapterView.
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                       /* if (result.getResultCode() == Activity.RESULT_OK) {
-                            ReiniciarAba();
-                        }
-                        else {
-                            ReiniciarAba();
-                        }*/if (result.getResultCode() == Activity.RESULT_OK) {
+                       if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
                             Intent data = result.getData();
                             if(!abaMedicos){
@@ -106,39 +93,26 @@ public class consultaActivity extends AppCompatActivity  implements AdapterView.
                     }
                 });
     }
+
     public void AbrirLogin(){
         Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
         startActivity(LoginActivity);
     }
-    public void ReiniciarAba(){
-        Intent consultaActivity = new Intent(this, consultaActivity.class);
-        finish();
-        startActivity(consultaActivity);
-    }
+
     public void AbrirAbaInicial(View v)
     {
         this.finish();
     }
-    public void AbrirAbaAdicionarConsulta(View v)
-    {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idConsulta",null);
-        Intent adicionarConsultaActivity = new Intent(this, adicionarConsultaActivity.class);
-        adicionarConsultaActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarConsultaActivity);*/
-        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarConsultaActivity.class,"idConsulta",null));
 
+    public void AbrirAbaAdicionarConsulta(View v){
+        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarConsultaActivity.class,"idConsulta",null));
     }
-    public void AbrirAbaPerfilConsulta(View v)
-    {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idConsulta",v.getTag().toString());
-        Intent perfilConsultaActivity = new Intent(this, perfilConsultaActivity.class);
-        perfilConsultaActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilConsultaActivity);*/
+
+    public void AbrirAbaPerfilConsulta(View v){
         activityResultLauncher.launch(funcoes.BundleActivy(this,perfilConsultaActivity.class,"idConsulta",v.getTag().toString()));
     }
+
     public  void OrganizarPorMedicos(View v) {
         DadosConsultasOpenHelper DCOH = new DadosConsultasOpenHelper(getApplicationContext());
         NomeMedicos = DCOH.buscaMedicosConsulta(IdUsuarioAtual);
@@ -153,37 +127,16 @@ public class consultaActivity extends AppCompatActivity  implements AdapterView.
                 int idMedicoAtual = DMOH.buscaIdMedico("nome", "'"+NomeMedicos.get(i)+"'", "ASC",IdUsuarioAtual).get(0);
                 funcoes.CriarExpansorMedico(this,LayoutButton,idMedicoAtual,NomeMedicos.get(i),ListaLinearMedicos,ListaImageSeta);
                 IdMedicos.add(idMedicoAtual);
-                /*
-                int idMedicoAtual = DMOH.buscaIdMedico("nome", "'"+NomeMedicos.get(i)+"'", "ASC",IdUsuarioAtual).get(0);
-                ViewStub stub = new ViewStub(this);
-                stub.setLayoutResource(R.layout.expansor_layout);
-                LayoutButton.addView(stub);
-                View inflated = stub.inflate();
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) inflated.getLayoutParams();
-                params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
-                Button b = inflated.findViewById(R.id.buttonExpandir);
-                //b.setTag(DMOH.buscaIdMedicoString("nome", NomeMedicos.get(i), "ASC").get(0));
-                b.setTag(idMedicoAtual);
-                ImageView imageView = inflated.findViewById(R.id.imagemExpandir);
-                LinearLayout linearLayout = inflated.findViewById(R.id.LayoutButtonExame);
-                linearLayout.setVisibility(View.INVISIBLE);
-                TextView t1 = inflated.findViewById(R.id.textView1);
-                t1.setText(NomeMedicos.get(i));
-                ListaLinearMedicos.add(linearLayout);
-                ListaImageSeta.add(imageView);
-                //IdMedicos.add(DMOH.buscaIdMedicoString("nome", NomeMedicos.get(i), "ASC").get(0));
-                IdMedicos.add(idMedicoAtual);*/
             }
             abaMedicos = true;
         }
-        else
-        {
+        else{
             AtualizarBotoes(colunaOrdenar,ordemOrdenar);
             abaMedicos = false;
         }
     }
-    public void AbrirMedico(View v)
-    {
+
+    public void AbrirMedico(View v){
         int idMedicoAberto = Integer.parseInt(v.getTag().toString());
         int indice = IdMedicos.indexOf(idMedicoAberto);
         LinearLayout linearLayout = ListaLinearMedicos.get(indice);
@@ -192,13 +145,13 @@ public class consultaActivity extends AppCompatActivity  implements AdapterView.
             linearLayout.setVisibility(View.VISIBLE);
             AtualizarBotoesAbaMedicos(colunaOrdenar, ordemOrdenar, linearLayout,idMedicoAberto);
         }
-        else
-        {
+        else {
             ListaImageSeta.get(indice).setRotation(0);
             linearLayout.removeAllViews();
             linearLayout.setVisibility(View.INVISIBLE);
         }
     }
+
     public void FecharMedicos() {
         for (int i = 0; i > ListaLinearMedicos.size(); i++) {
             ListaImageSeta.get(i).setRotation(0);
@@ -206,16 +159,12 @@ public class consultaActivity extends AppCompatActivity  implements AdapterView.
         }
     }
 
-
-    public  void AtualizarBotoesAbaMedicos(String orderColuna, String ordem,LinearLayout LayoutButton, int idMedicoAberto)
-    {
+    public  void AtualizarBotoesAbaMedicos(String orderColuna, String ordem,LinearLayout LayoutButton, int idMedicoAberto){
         DadosConsultasOpenHelper DCOH = new DadosConsultasOpenHelper(getApplicationContext());
-        //List<Integer> idConsultas = DCOH.buscaIdConsultasInt("idMedico", idMedicoAberto, ordem);
         List<Integer> idConsultas = DCOH.buscaIdConsultas("idMedico", idMedicoAberto+"", ordem,IdUsuarioAtual);
         LayoutButton.removeAllViews();
         DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
-        for(int i = 0; i<idConsultas.size(); i++)
-        {
+        for(int i = 0; i<idConsultas.size(); i++){
             Consulta consulta = DCOH.BuscaConsulta(idConsultas.get(i),IdUsuarioAtual);
             Medico medico = DMOH.BuscaMedico(consulta.getIdMedico(),IdUsuarioAtual);
             funcoes.CriarBotoes(this,LayoutButton,idConsultas.get(i),medico.getNome(),
@@ -225,20 +174,18 @@ public class consultaActivity extends AppCompatActivity  implements AdapterView.
         DCOH.close();
         DMOH.close();
     }
-    public  void AtualizarBotoes(String orderColuna, String ordem)
-    {
+
+    public  void AtualizarBotoes(String orderColuna, String ordem){
         DadosConsultasOpenHelper DCOH = new DadosConsultasOpenHelper(getApplicationContext());
         List<Consulta> consultas = DCOH.BuscaConsultas(orderColuna,ordem,IdUsuarioAtual);
         LinearLayout LayoutButton = findViewById(R.id.LayoutButton);
         LayoutButton.removeAllViews();
         DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
-        for(int i = 0; i<consultas.size(); i++)
-        {
+        for(int i = 0; i<consultas.size(); i++){
             Medico medico = DMOH.BuscaMedico(consultas.get(i).getIdMedico(),IdUsuarioAtual);
             funcoes.CriarBotoes(this,LayoutButton,consultas.get(i).getId(),medico.getNome(),
                     ((consultas.get(i).getDia() == 0)? "":consultas.get(i).getDia() + "/") + ((consultas.get(i).getMes() == 0)? "":consultas.get(i).getMes() + "/") + ((consultas.get(i).getAno() == 0)? "":consultas.get(i).getAno()),
                     consultas.get(i).getHora(),R.layout.botao_consulta_completo);
-
         }
         DCOH.close();
         DMOH.close();
@@ -247,25 +194,19 @@ public class consultaActivity extends AppCompatActivity  implements AdapterView.
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
-        //((TextView) parent.getChildAt(0)).setTextSize(5);
         ((TextView) parent.getChildAt(0)).setGravity(0x11);
-
         if(parent.getId() == R.id.spinnerExame1 ) {
-            if(position == 0)
-            {
+            if(position == 0){
                 colunaOrdenar = "idMedico";
             }
-            else if (position == 1)
-            {
+            else if (position == 1){
                 colunaOrdenar = "hora";
             }
-            else
-            {
+            else{
                 colunaOrdenar = "ano,mes,dia";
             }
         }
-        else if(parent.getId() == R.id.spinnerExame2 )
-        {
+        else if(parent.getId() == R.id.spinnerExame2 ){
             if (position == 0) {
                 ordemOrdenar = "ASC";
             } else {
@@ -277,8 +218,7 @@ public class consultaActivity extends AppCompatActivity  implements AdapterView.
             if(!abaMedicos){
                 AtualizarBotoes(colunaOrdenar, ordemOrdenar);
             }
-            else
-            {
+            else{
                 FecharMedicos();
             }
         }

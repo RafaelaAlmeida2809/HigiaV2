@@ -6,7 +6,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -21,17 +20,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.squareup.picasso.Picasso;
-
 import java.io.File;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import dataBase.Consulta;
 import dataBase.DadosConsultasOpenHelper;
 import dataBase.DadosExamesOpenHelper;
@@ -112,12 +106,6 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
-                            // There are no request codes
-                            //Intent data = result.getData();
-                            //DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
-                            //thisMedico = DMOH.BuscaMedico(Integer.parseInt(idMedico),IdUsuarioAtual);
-                            //DMOH.close();
-                            //AtualizarTextPerfil();
                             ReiniciarAba();
                         }
                         else {ReiniciarAba();}
@@ -137,13 +125,8 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
         setResult(RESULT_OK,intent);
         this.finish();
     }
+
     public void ReiniciarAba() {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idMedico",idMedico);
-        Intent thisActivity = new Intent(this, perfilMedicoActivity.class);
-        thisActivity.putExtras(bundle);
-        startActivity(thisActivity);
-        finish();*/
         startActivity(funcoes.BundleActivy(this,perfilMedicoActivity.class,"idMedico",idMedico));
         finish();
     }
@@ -161,22 +144,22 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
         FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
         funcao.ModalConfirmacao(getResources().getString(R.string.titulo_delMedico1),getResources().getString(R.string.texto_delMedico1),this,this);
     }
+
     public void RetornoModal(boolean resultado){
         if(resultado) {
             if(!segundo){
                 segundo = true;
                 FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
                 funcao.ModalConfirmacao(getResources().getString(R.string.titulo_delMedico2),getResources().getString(R.string.texto_delMedico2),this,this);
-            }
-            else {
+            }else {
                 segundo = false;
                 ApagarMedico();
             }
-        }
-        else {
+        }else {
             segundo = false;
         }
     }
+
     public void ApagarMedico() {
         DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
         int deletouImagem = 0;
@@ -203,8 +186,7 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
                     ContentResolver resolver = getApplicationContext().getContentResolver();
                     deletouImagens = resolver.delete(selectedImageUri, null, null);
                 }
-            }
-            catch (Exception e) {
+            }catch (Exception e) {
                 e.printStackTrace();
             }
             DEOH.DeletaExame(listaIdExames.get(i),IdUsuarioAtual);
@@ -228,30 +210,11 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
     }
 
     public void AbrirGoogleMaps(View v) {
-        //https://www.google.com/maps/dir abre o modo rota
-        String urlMap = "https://www.google.com/maps/search/" +((thisMedico.getCep()==0)? "":thisMedico.getCep())
-                + ((thisMedico.getLogradouro()=="")? "":"+_+" + thisMedico.getLogradouro())
-                + ((thisMedico.getBairro()=="")? "":"+_+" + thisMedico.getBairro())
-                + ((thisMedico.getCidade()=="")? "":"+_+" + thisMedico.getCidade())
-                + ((thisMedico.getEstado()=="")? "":"+_+" + thisMedico.getEstado())
-                + ((thisMedico.getNumero()==0)? "":"+_+" + thisMedico.getNumero());
-        urlMap.replace(" ","+");
-        urlMap.replace("ç","c");
-        urlMap = Normalizer.normalize(urlMap, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
-        Uri uriMap = Uri.parse(urlMap);
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, uriMap);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
+        startActivity(funcoes.AbrirGoogleMaps(thisMedico));
     }
 
     public void EditarMedico(View v) {
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idMedico",idMedico);
-        Intent adicionarMedicoActivity = new Intent(this, adicionarMedicoActivity.class);
-        adicionarMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarMedicoActivity);*/
         activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarMedicoActivity.class,"idMedico",idMedico));
-
     }
 
     public void AbrirChamada (View v){
@@ -308,9 +271,6 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
             else if(listaNome.get(tagInt-1) == "Consultas"){
                 AtualizarBotoesAbaConsulta("tipo", "ASC", linear, Integer.parseInt(idMedico));
             }
-            else {
-                Toast.makeText(getApplicationContext(),"Valor tag incorreto",Toast.LENGTH_SHORT).show();
-            }
         }
         else {
             listaSeta.get(tagInt-1).setRotation(0);
@@ -352,19 +312,16 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
         }
         linearLayout.removeAllViews();
         DadosExamesOpenHelper DEOH = new DadosExamesOpenHelper(getApplicationContext());
-        //List<Integer> exames = DEOH.buscaIdExamesInt("idMedico",Integer.parseInt(idMedico),"ASC");
         List<Integer> exames = DEOH.buscaIdExames("idMedico",Integer.parseInt(idMedico)+"","ASC",IdUsuarioAtual);
         if (exames.size()>0) {
             AtivarLinear("Exames");
         }
         DadosRemediosOpenHelper DROH = new DadosRemediosOpenHelper(getApplicationContext());
-        //List<Integer> remedios = DROH.buscaIdRemedioInt("idMedico",Integer.parseInt(idMedico),"ASC");
         List<Integer> remedios = DROH.buscaIdRemedio("idMedico",Integer.parseInt(idMedico)+"","ASC",IdUsuarioAtual);
         if (remedios.size()>0) {
             AtivarLinear("Remédios");
         }
         DadosConsultasOpenHelper DCOH = new DadosConsultasOpenHelper(getApplicationContext());
-        //List<Integer> consultas = DCOH.buscaIdConsultasInt("idMedico",Integer.parseInt(idMedico),"ASC");
         List<Integer> consultas = DCOH.buscaIdConsultas("idMedico",Integer.parseInt(idMedico)+"","ASC",IdUsuarioAtual);
         if (consultas.size()>0) {
             AtivarLinear("Consultas");
@@ -378,9 +335,9 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
             botaoChamada.setVisibility(View.INVISIBLE);
         }
     }
+
     ////////////////////////////////////////////////////CODIGOS DO EXAME/////////////////////////////////////////////////////////////
-    public  void AtualizarBotoesAbaExame(String orderColuna, String ordem,LinearLayout LayoutButton, int idMedicoAberto)
-    {
+    public  void AtualizarBotoesAbaExame(String orderColuna, String ordem,LinearLayout LayoutButton, int idMedicoAberto){
         DadosExamesOpenHelper DEOH = new DadosExamesOpenHelper(getApplicationContext());
         List<Integer> idExames = DEOH.buscaIdExames("idMedico",idMedicoAberto+"",ordem,IdUsuarioAtual);
         LayoutButton.removeAllViews();
@@ -390,33 +347,11 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
             funcoes.CriarBotoes(this,LayoutButton,idExames.get(i),exame.getTipo(),exame.getParteCorpo(),
                     ((exame.getDia() == 0)? "":exame.getDia() + "/") + ((exame.getMes() == 0)? "":exame.getMes() + "/") + ((exame.getAno() == 0)? "":exame.getAno() )
                     ,R.layout.botao_exame_completo);
-            /*Exame exame = DEOH.BuscaExame(idExames.get(i),IdUsuarioAtual);
-            ViewStub stub = new ViewStub(this);
-            stub.setLayoutResource(R.layout.botao_exame_completo);
-            LayoutButton.addView(stub);
-            View inflated = stub.inflate();
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)inflated.getLayoutParams();
-            params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
-            Button b = inflated.findViewById(R.id.buttonPerfil);
-            b.setTag(idExames.get(i));
-            TextView t1 = inflated.findViewById(R.id.textView1);
-            t1.setText(exame.getTipo());
-            t1.setWidth(LayoutButton.getWidth()/2);
-            TextView t2 = inflated.findViewById(R.id.textView2 );
-            t2.setText(exame.getParteCorpo());
-            t2.setWidth(LayoutButton.getWidth()/2);
-            TextView t3 = inflated.findViewById(R.id.textView3 );
-            t3.setText(((exame.getDia() == 0)? "":exame.getDia() + "/") + ((exame.getMes() == 0)? "":exame.getMes() + "/") + ((exame.getAno() == 0)? "":exame.getAno() ));
-            t3.setWidth(LayoutButton.getWidth()/2);*/
         }
     }
+
     public void AbrirAbaPerfilExame(View v) {
         activityResultLauncher.launch(funcoes.BundleActivy(this,perfilExameActivity.class,"idExame",v.getTag().toString()));
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idExame",v.getTag().toString());
-        Intent perfilExameActivity = new Intent(this, perfilExameActivity.class);
-        perfilExameActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilExameActivity);*/
     }
 
     ///////////////////////////////////////////////////CODIGOS DO REMEDIO////////////////////////////////////////////////////////////
@@ -429,34 +364,13 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
             Remedio remedio = DROH.BuscaRemedio(idRemedios.get(i),IdUsuarioAtual);
             funcoes.CriarBotoes(this,LayoutButton,idRemedios.get(i),remedio.getNome(),remedio.getDosagem(),
                     remedio.getFormato(),R.layout.botao_remedio_completo);
-            /*Remedio remedio = DROH.BuscaRemedio(idRemedios.get(i),IdUsuarioAtual);
-            ViewStub stub = new ViewStub(this);
-            stub.setLayoutResource(R.layout.botao_remedio_completo);
-            LayoutButton.addView(stub);
-            View inflated = stub.inflate();
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)inflated.getLayoutParams();
-            params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
-            Button b = inflated.findViewById(R.id.buttonPerfil);
-            b.setTag(idRemedios.get(i));
-            TextView t1 = inflated.findViewById(R.id.textView1);
-            t1.setText(remedio.getNome());
-            t1.setWidth(LayoutButton.getWidth()/2);
-            TextView t2 = inflated.findViewById(R.id.textView2 );
-            t2.setText(remedio.getDosagem());
-            t2.setWidth(LayoutButton.getWidth()/2);
-            TextView t3 = inflated.findViewById(R.id.textView3 );
-            t3.setText(remedio.getFormato());
-            t3.setWidth(LayoutButton.getWidth()/2);*/
         }
     }
+
     public void AbrirAbaPerfilRemedio(View v){
         activityResultLauncher.launch(funcoes.BundleActivy(this,perfilRemedioActivity.class,"idRemedio",v.getTag().toString()));
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idRemedio",v.getTag().toString());
-        Intent perfilRemedioActivity = new Intent(this, perfilRemedioActivity.class);
-        perfilRemedioActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilRemedioActivity);*/
     }
+
     //////////////////////////////////////////////////CODIGOS DA CONSULTA////////////////////////////////////////////////////////////
     public  void AtualizarBotoesAbaConsulta (String orderColuna, String ordem,LinearLayout LayoutButton, int idMedicoAberto) {
         DadosConsultasOpenHelper DCOH = new DadosConsultasOpenHelper(getApplicationContext());
@@ -470,37 +384,11 @@ public class perfilMedicoActivity extends AppCompatActivity implements MyInterfa
             funcoes.CriarBotoes(this,LayoutButton,idConsultas.get(i),medico.getNome(),
                     ((consulta.getDia() == 0)? "":consulta.getDia() + "/") + ((consulta.getMes() == 0)? "":consulta.getMes() + "/") + ((consulta.getAno() == 0)? "":consulta.getAno() ),
                     consulta.getHora(),R.layout.botao_consulta_completo);
-            /*Consulta consulta = DCOH.BuscaConsulta(idConsultas.get(i),IdUsuarioAtual);
-            ViewStub stub = new ViewStub(this);
-            stub.setLayoutResource(R.layout.botao_consulta_completo);
-            LayoutButton.addView(stub);
-            View inflated = stub.inflate();
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) inflated.getLayoutParams();
-            params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
-            Button b = inflated.findViewById(R.id.buttonPerfil);
-            b.setTag(idConsultas.get(i));
-            TextView t1 = inflated.findViewById(R.id.textView1);
-            DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
-            Medico medico = DMOH.BuscaMedico(idMedicoAberto,IdUsuarioAtual);
-            t1.setText(medico.getNome());
-            t1.setWidth(LayoutButton.getWidth() / 2);
-            TextView t2 = inflated.findViewById(R.id.textView2);
-            t2.setText(((consulta.getDia() == 0) ? "" : consulta.getDia() + "/") + ((consulta.getMes() == 0) ? "" : consulta.getMes() + "/") + ((consulta.getAno() == 0) ? "" : consulta.getAno()));
-            t2.setWidth(LayoutButton.getWidth() / 2);
-            TextView t3 = inflated.findViewById(R.id.textView3);
-            t3.setText(consulta.getHora());
-            t3.setWidth(LayoutButton.getWidth() / 2);
-            DMOH.close();*/
         }
     }
-    public void AbrirAbaPerfilConsulta(View v)
-    {
+
+    public void AbrirAbaPerfilConsulta(View v){
         activityResultLauncher.launch(funcoes.BundleActivy(this,perfilConsultaActivity.class,"idConsulta",v.getTag().toString()));
-        /*Bundle bundle = new Bundle();
-        bundle.putString("idConsulta",v.getTag().toString());
-        Intent perfilConsultaActivity = new Intent(this, perfilConsultaActivity.class);
-        perfilConsultaActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilConsultaActivity);*/
     }
 
 }

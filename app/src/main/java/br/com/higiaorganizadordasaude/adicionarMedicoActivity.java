@@ -6,7 +6,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -27,13 +26,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,7 +43,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-
 import dataBase.DadosMedicosOpenHelper;
 import dataBase.Medico;
 
@@ -111,7 +106,7 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
         botaoDeletar = findViewById(R.id.botaoDeletar);
 
         //Mascara telefone
-        SimpleMaskFormatter mascaraTelefone = new SimpleMaskFormatter("(NN) NNNNN-NNNN");
+        SimpleMaskFormatter mascaraTelefone = new SimpleMaskFormatter("(NN) NNNNNNNNN");
         MaskTextWatcher textoMascaraTelefone = new MaskTextWatcher(numeroTelefone, mascaraTelefone);
         numeroTelefone.addTextChangedListener(textoMascaraTelefone);
 
@@ -152,7 +147,7 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                                     pegarFotoGaleria = false;
                                 } catch (FileNotFoundException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), "Erro ao pegar imagem ", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.erro_salvarImagem, Toast.LENGTH_SHORT).show();
                                 }
                             }
                             else{
@@ -164,13 +159,15 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                                     int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                                     phoneNumber = cursor.getString(phoneIndex);
                                     if (phoneNumber.toString().length() > 11) {
-                                        phoneNumber = phoneNumber.toString().substring(phoneNumber.toString().length() - 11, phoneNumber.toString().length());
+                                        phoneNumber = phoneNumber.substring(phoneNumber.length() - 11);
+                                        if(phoneNumber.substring(0,1) =="0"){
+                                            phoneNumber = phoneNumber.substring(1);
+                                        }
                                     }
                                     numeroTelefone.setText(phoneNumber);
                                     cursor.close();
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), "Erro try ", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -190,6 +187,7 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
         setResult(RESULT_OK,intent);
         this.finish();
     }
+
     public void AbrirModalVoltar(View v){
         funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
     }
@@ -226,7 +224,6 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
         if(!nomeMedico.isEmpty() && nomeMedico.length()>2 && !especialidadeMedico.isEmpty() && especialidadeMedico.length()>5) {
             if(telefoneMedico.getText().toString().isEmpty() || telefoneMedico.getText().toString().length()==15 || telefoneMedico.getText().toString().length()==14) {
                 if (textCep.getText().toString().isEmpty() || textCep.getText().toString().length() == 9) {
-                    //Verificar se o medico já não existe
                     DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
                     Medico medico = new Medico();
                     medico.setNome(textNomeMedico.getText().toString());
@@ -267,10 +264,8 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                     }
                     boolean ErroImagem = false;
                     if(possuiFoto) {
-
                         boolean deletar = false;
-                        if(funcaoRecebida == "Editar")
-                        {
+                        if(funcaoRecebida == "Editar"){
                             Medico thisMedico = DMOH.BuscaMedico(Integer.parseInt(idMedico),IdUsuarioAtual);
                             deletar = DeletarImagem(thisMedico);
                         }
@@ -280,7 +275,6 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                                 try {
                                     photoFile = createImageFile();
                                 } catch (IOException ex) {
-
                                 }
                                 try {
                                     BitmapDrawable bitmapDrawable = (BitmapDrawable) imagemMedico.getBackground();
@@ -292,17 +286,17 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                     ErroImagem = true;
-                                    Toast.makeText(getApplicationContext(), "Erro ao salvar Imagem 1", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.erro_salvarImagem, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 ErroImagem = true;
-                                Toast.makeText(getApplicationContext(), "Erro ao salvar Imagem", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),  R.string.erro_salvarImagem, Toast.LENGTH_SHORT).show();
                             }
                         }
                         else {
                             ErroImagem = true;
-                            Toast.makeText(getApplicationContext(), "Erro ao salvar Imagem", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),  R.string.erro_salvarImagem, Toast.LENGTH_SHORT).show();
                         }
                     }
                     else
@@ -322,13 +316,11 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                         VoltarAbaAnterior();
                     }
                 }
-                else
-                {
+                else{
                     Toast.makeText(getApplicationContext(),R.string.cep_valido,Toast.LENGTH_SHORT).show();
                 }
             }
-            else
-            {
+            else{
                 Toast.makeText(getApplicationContext(),R.string.telefone_valido,Toast.LENGTH_SHORT).show();
             }
         }
@@ -376,18 +368,8 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
         }
         DMOH.close();
     }
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String text = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(),text,Toast.LENGTH_SHORT);
-    }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-    public boolean DeletarImagem(Medico thisMedico)
-    {
+    public boolean DeletarImagem(Medico thisMedico){
         int deletouImagens = 0;
         try {
             File f = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.pathSeparator + thisMedico.getUriImagem());
@@ -400,7 +382,6 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
             e.printStackTrace();
             return false;
         }
-
     }
     private File createImageFile()throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -411,8 +392,7 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
         return image;
     }
     /////////////////////////CEP///////////////////////////////////////
-    public  void ProcurarCep(View v)
-    {
+    public  void ProcurarCep(View v){
         boolean ok = false;
         URL url = null;
         try{
@@ -426,7 +406,7 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
             ok = false;
         }
         if(textCep.length()==9 && ok) {
-            getDadosCEP3 classJson = new getDadosCEP3();
+            getDadosCEP classJson = new getDadosCEP();
             classJson.execute();
         }
     }
@@ -439,7 +419,6 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
         urlConnection.setConnectTimeout(15000 /* milliseconds */ );
         urlConnection.setDoOutput(true);
         urlConnection.connect();
-
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
         StringBuilder sb = new StringBuilder();
         String line;
@@ -450,18 +429,15 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
         String jsonString = sb.toString();
         return new JSONObject(jsonString);
     }
-    public class getDadosCEP3 extends AsyncTask<Void, Void, Void> {
-
+    public class getDadosCEP extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-            Toast.makeText(getApplicationContext(),"Carregando CEP...",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),R.string.carregando_cep,Toast.LENGTH_SHORT).show();
         }
-
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                //jsonObjectBase = adicionarMedicoActivity.getJSONObjectFromURL(url);
                 jsonObjectBase = adicionarMedicoActivity.getJSONObjectFromURL(urlCep);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -482,16 +458,15 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                 textEstado.setText(estado);
                 textCidade.setText(cidade);
                 textBairro.setText(bairro);
-                Toast.makeText(getApplicationContext(),"Finalizou...",Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
                 e.printStackTrace();
                 try {
                     if(jsonObjectBase.length()==0){
-                        Toast.makeText(getApplicationContext(),"Cep Incorreto",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),R.string.cep_incorreto,Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    Toast.makeText(getApplicationContext(),"Erro try2",Toast.LENGTH_SHORT).show();
+
                 }
             }
         }
@@ -502,5 +477,15 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
        AbrirModalVoltar(null);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String text = parent.getItemAtPosition(position).toString();
+        Toast.makeText(parent.getContext(),text,Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
 
