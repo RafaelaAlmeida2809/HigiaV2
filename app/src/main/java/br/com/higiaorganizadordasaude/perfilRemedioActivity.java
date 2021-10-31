@@ -10,30 +10,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-
-import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
 import dataBase.DadosRemediosOpenHelper;
-import dataBase.DadosUsuariosOpenHelper;
-import dataBase.Exame;
 import dataBase.Medico;
 import dataBase.Remedio;
-import dataBase.Usuario;
 
-public class perfilRemedioActivity extends AppCompatActivity {
+public class perfilRemedioActivity extends AppCompatActivity implements MyInterface {
     ActivityResultLauncher<Intent> activityResultLauncher;
     private FrameLayout imagemModal;
     public boolean AtivadoModal = false;
@@ -51,17 +37,20 @@ public class perfilRemedioActivity extends AppCompatActivity {
     public TextView horario4;
     public TextView quantidadeRemedio;
     int IdUsuarioAtual;
+    FuncoesCompartilhadas funcoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_remedio);
 
-        //Verificar Loguin
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
+        IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -92,15 +81,15 @@ public class perfilRemedioActivity extends AppCompatActivity {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
                             Intent data = result.getData();
-                            AtualizarTextPerfil();
+                            ReiniciarAba();
                         }
                     }
                 });
     }
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
 
     public void AbrirAbaRemedio(View v) {
@@ -118,25 +107,12 @@ public class perfilRemedioActivity extends AppCompatActivity {
     }
     public void ModalApagar (View v)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(R.string.titulo_delRemedio);
-        builder.setMessage(R.string.texto_delRemedio);
-        builder.setPositiveButton(R.string.sim,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ApagarRemedio();
-                    }
-                });
-        builder.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_delRemedio),getResources().getString(R.string.texto_delRemedio),this,this);
+    }
+    public void RetornoModal(boolean resultado) {
+        if (resultado) {
+            ApagarRemedio();
+        }
     }
     public void ApagarRemedio()
     {
@@ -145,20 +121,25 @@ public class perfilRemedioActivity extends AppCompatActivity {
         finish();
     }
 
-    public void EditarRemedio(View v)
-    {
-        Bundle bundle = new Bundle();
+    public void ReiniciarAba() {
+        startActivity(funcoes.BundleActivy(this,perfilRemedioActivity.class,"idRemedio",idRemedio));
+        finish();
+    }
+    public void EditarRemedio(View v) {
+        /*Bundle bundle = new Bundle();
         bundle.putString("idRemedio",idRemedio);
         Intent adicionarRemedioActivity = new Intent(this, adicionarRemedioActivity.class);
         adicionarRemedioActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarRemedioActivity);
+        activityResultLauncher.launch(adicionarRemedioActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarRemedioActivity.class,"idRemedio",idRemedio));
     }
     public void AbrirPerfilMedico (View v){
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("idMedico",idMedico);
         Intent perfilMedicoActivity = new Intent(this, perfilMedicoActivity.class);
         perfilMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilMedicoActivity);
+        activityResultLauncher.launch(perfilMedicoActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,perfilMedicoActivity.class,"idMedico",idMedico));
     }
     public  void AtualizarTextPerfil()
     {

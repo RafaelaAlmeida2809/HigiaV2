@@ -5,13 +5,10 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,12 +24,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,10 +33,8 @@ import java.util.List;
 
 import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
-import dataBase.DadosUsuariosOpenHelper;
 import dataBase.Exame;
 import dataBase.Medico;
-import dataBase.Usuario;
 
 public class perfilExameActivity extends AppCompatActivity implements MyInterface {
 
@@ -65,17 +54,20 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
     String idExame;
     String idMedico;
     String nomeUsuario;
+    FuncoesCompartilhadas funcoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_exame);
 
-        //Verificar Loguin
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
+        IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -111,10 +103,10 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
                 });
     }
 
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
 
     public void AbrirAbaExame(View v) {
@@ -124,11 +116,12 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
         this.finish();
     }
     public void ReiniciarAba() {
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("idExame",idExame);
         Intent thisActivity = new Intent(this, perfilExameActivity.class);
         thisActivity.putExtras(bundle);
-        startActivity(thisActivity);
+        startActivity(thisActivity);*/
+        startActivity(funcoes.BundleActivy(this,perfilExameActivity.class,"idExame",idExame));
         finish();
     }
 
@@ -141,8 +134,7 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
         }
     }
     public  void AbrirModalDeletar(View v) {
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_delExame),getResources().getString(R.string.texto_delExame),this,this);
+        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_delExame),getResources().getString(R.string.texto_delExame),this,this);
     }
     public void RetornoModal(boolean resultado){
         if(resultado) {
@@ -177,12 +169,22 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
         }
     }
 
+    public void AbrirPerfilMedico (View v){
+        /*Bundle bundle = new Bundle();
+        bundle.putString("idMedico",idMedico);
+        Intent perfilMedicoActivity = new Intent(this, perfilMedicoActivity.class);
+        perfilMedicoActivity.putExtras(bundle);
+        activityResultLauncher.launch(perfilMedicoActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,perfilMedicoActivity.class,"idMedico",idMedico));
+    }
     public void EditarExame(View v) {
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("idExame",idExame);
         Intent adicionarExameActivity = new Intent(this, adicionarExameActivity.class);
         adicionarExameActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarExameActivity);
+        activityResultLauncher.launch(adicionarExameActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarExameActivity.class,"idExame",idExame));
+
     }
 
     public void AbrirImagem(View v) {
@@ -261,13 +263,6 @@ public class perfilExameActivity extends AppCompatActivity implements MyInterfac
         startActivity(Intent.createChooser(email, "Choose an Email client :"));
     }
 
-    public void AbrirPerfilMedico (View v){
-        Bundle bundle = new Bundle();
-        bundle.putString("idMedico",idMedico);
-        Intent perfilMedicoActivity = new Intent(this, perfilMedicoActivity.class);
-        perfilMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilMedicoActivity);
-    }
 
     public  void AtualizarTextPerfil() {
         botaoEsquerdo.setTag(-1);

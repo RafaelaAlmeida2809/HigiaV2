@@ -7,11 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,20 +17,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
-import java.util.Locale;
-import dataBase.DadosUsuariosOpenHelper;
+
 import dataBase.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MyInterface {
 
     ActivityResultLauncher<Intent> activityResultLauncher;
     private GoogleSignInClient mGoogleSignInClient;
@@ -47,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     int IdUsuarioAtual;
     boolean retornoPerfil;
     Usuario usuarioAtual;
+    FuncoesCompartilhadas funcoes;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -54,11 +47,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Verificar Loguin
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
+        signInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -93,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
 
     public void ReinicarActivity(){
@@ -124,51 +120,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void AbrirAbaConsultas(View v){
-       // Toast.makeText(getApplicationContext(), "Ainda em desenvolvimento", Toast.LENGTH_SHORT).show();
-        Intent exameActivity = new Intent(this,consultaActivity.class);
-        startActivity(exameActivity);
+        Intent consultaActivity = new Intent(this,consultaActivity.class);
+        startActivity(consultaActivity);
     }
 
     public void AbrirAbaRemedio(View v){
-        Toast.makeText(getApplicationContext(), "Ainda em desenvolvimento", Toast.LENGTH_SHORT).show();
+        Intent remedioActivity = new Intent(this,remedioActivity.class);
+        startActivity(remedioActivity);
     }
 
     public  void abrirPerfil(View v){
-        Toast.makeText(getApplicationContext(), "Ainda em desenvolvimento", Toast.LENGTH_SHORT).show();
+        Intent perfilActivity = new Intent(this,perfilActivity.class);
+        startActivity(perfilActivity);
     }
 
-    public void ModalDeslogar (View v)
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle("Deslogar conta");
-        builder.setMessage("Você tem certeza que deseja deslogar?");
-        builder.setPositiveButton("Sim",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Deslogar();
-                    }
-                });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+    public void ModalDeslogar (View v) {
+        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_deslogarConta),getResources().getString(R.string.texto_deslogarConta), this, this);
     }
-
-    public void Deslogar (){
-        FirebaseAuth.getInstance().signOut();
-        mGoogleSignInClient.signOut();
-        Intent intent = new Intent(getApplicationContext(),LoguinActivity.class);
-        finish();
-        startActivity(intent);
+    public void RetornoModal(boolean resultado) {
+        if (resultado) {
+            funcoes.DeslogarGoogle(this);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            finish();
+            startActivity(intent);
+        }
     }
-
     public  void regularTamanho()
     {
         DisplayMetrics displayMetrics = new DisplayMetrics();

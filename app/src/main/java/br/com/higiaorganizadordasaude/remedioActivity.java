@@ -8,12 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -22,21 +20,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
 import dataBase.DadosRemediosOpenHelper;
-import dataBase.DadosUsuariosOpenHelper;
-import dataBase.Exame;
 import dataBase.Remedio;
-import dataBase.Usuario;
 
 public class remedioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
@@ -52,17 +41,21 @@ public class remedioActivity extends AppCompatActivity implements AdapterView.On
     boolean abaMedicos = false;
     CheckBox checkMedico;
     int IdUsuarioAtual;
+    FuncoesCompartilhadas funcoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_remedio);
 
-        //Verificar Loguin
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
+
+        IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -71,8 +64,8 @@ public class remedioActivity extends AppCompatActivity implements AdapterView.On
         spinner2 = findViewById(R.id.spinnerRemedio2);
 
         //Carregar spinners
-        funcao.CriarSpinner(this,spinner1,R.array.ordenar_Remedio_Coluna,null);
-        funcao.CriarSpinner(this,spinner2,R.array.ordenar_Ordem,null);
+        funcoes.CriarSpinner(this,spinner1,R.array.ordenar_Remedio_Coluna,null);
+        funcoes.CriarSpinner(this,spinner2,R.array.ordenar_Ordem,null);
 
         //Inicia os componentes da pagina
         AtualizarBotoes("nome","ASC");
@@ -93,14 +86,23 @@ public class remedioActivity extends AppCompatActivity implements AdapterView.On
                                 FecharMedicos();
                             }
                         }
+                        else {
+                            if(!abaMedicos){
+                                AtualizarBotoes(colunaOrdenar, ordemOrdenar);
+                            }
+                            else {
+                                OrganizarPorMedicos(null);
+                                FecharMedicos();
+                            }
+                        }
                     }
                 });
     }
 
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
 
     public void AbrirAbaInicial(View v)
@@ -110,20 +112,22 @@ public class remedioActivity extends AppCompatActivity implements AdapterView.On
 
     public void AbrirAbaAdicionarRemedio(View v)
     {
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("idRemedio",null);
         Intent adicionarRemedioActivity = new Intent(this, adicionarRemedioActivity.class);
         adicionarRemedioActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarRemedioActivity);
+        activityResultLauncher.launch(adicionarRemedioActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarRemedioActivity.class,"idRemedio",null));
     }
 
-    public void AbrirAbaPerfil(View v)
+    public void AbrirAbaPerfilRemedio(View v)
     {
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("idRemedio",v.getTag().toString());
         Intent perfilRemedioActivity = new Intent(this, perfilRemedioActivity.class);
         perfilRemedioActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilRemedioActivity);
+        activityResultLauncher.launch(perfilRemedioActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,perfilRemedioActivity.class,"idRemedio",v.getTag().toString()));
     }
 
     public  void OrganizarPorMedicos(View v) {
@@ -137,6 +141,9 @@ public class remedioActivity extends AppCompatActivity implements AdapterView.On
         IdMedicos.clear();
         if (checkMedico.isChecked()) {
             for (int i = 0; i < NomeMedicos.size(); i++) {
+                int idMedicoAtual = DMOH.buscaIdMedico("nome", "'"+NomeMedicos.get(i)+"'", "ASC",IdUsuarioAtual).get(0);
+                funcoes.CriarExpansorMedico(this,LayoutButton,idMedicoAtual,NomeMedicos.get(i),ListaLinearMedicos,ListaImageSeta);
+                IdMedicos.add(idMedicoAtual);/*
                 ViewStub stub = new ViewStub(this);
                 stub.setLayoutResource(R.layout.expansor_layout);
                 LayoutButton.addView(stub);
@@ -154,7 +161,7 @@ public class remedioActivity extends AppCompatActivity implements AdapterView.On
                 ListaLinearMedicos.add(linearLayout);
                 ListaImageSeta.add(imageView);
                 //IdMedicos.add(DMOH.buscaIdMedicoString("nome", NomeMedicos.get(i), "ASC").get(0));
-                IdMedicos.add(DMOH.buscaIdMedico("nome", "'"+NomeMedicos.get(i)+"'", "ASC",IdUsuarioAtual).get(0));
+                IdMedicos.add(DMOH.buscaIdMedico("nome", "'"+NomeMedicos.get(i)+"'", "ASC",IdUsuarioAtual).get(0));*/
             }
             abaMedicos = true;
         }
@@ -165,12 +172,11 @@ public class remedioActivity extends AppCompatActivity implements AdapterView.On
         }
     }
 
-    public void abrirMedico(View v)
+    public void AbrirMedico(View v)
     {
         int idMedicoAberto = Integer.parseInt(v.getTag().toString());
         int indice = IdMedicos.indexOf(idMedicoAberto);
         LinearLayout linearLayout = ListaLinearMedicos.get(indice);
-
         if(linearLayout.getVisibility() == View.INVISIBLE) {
             ListaImageSeta.get(indice).setRotation(180);
             linearLayout.setVisibility(View.VISIBLE);
@@ -192,29 +198,13 @@ public class remedioActivity extends AppCompatActivity implements AdapterView.On
     public  void AtualizarBotoesAbaMedicos(String orderColuna, String ordem,LinearLayout LayoutButton, int idMedicoAberto)
     {
         DadosRemediosOpenHelper DROH = new DadosRemediosOpenHelper(getApplicationContext());
-
         List<Integer> idRemedios = DROH.buscaIdRemedio("idMedico",idMedicoAberto +"",ordem,IdUsuarioAtual);
         LayoutButton.removeAllViews();
         for(int i = 0; i<idRemedios.size(); i++)
         {
             Remedio remedio = DROH.BuscaRemedio(idRemedios.get(i),IdUsuarioAtual);
-            ViewStub stub = new ViewStub(this);
-            stub.setLayoutResource(R.layout.botao_exame_completo);
-            LayoutButton.addView(stub);
-            View inflated = stub.inflate();
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)inflated.getLayoutParams();
-            params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
-            Button b = inflated.findViewById(R.id.buttonPerfil);
-            b.setTag(idRemedios.get(i));
-            TextView t1 = inflated.findViewById(R.id.textView1);
-            t1.setText(remedio.getNome());
-            t1.setWidth(LayoutButton.getWidth()/2);
-            TextView t2 = inflated.findViewById(R.id.textView2 );
-            t2.setText(remedio.getDosagem());
-            t2.setWidth(LayoutButton.getWidth()/2);
-            TextView t3 = inflated.findViewById(R.id.textView3 );
-            t3.setText(remedio.getFormato());
-            t3.setWidth(LayoutButton.getWidth()/2);
+            funcoes.CriarBotoes(this,LayoutButton,idRemedios.get(i),remedio.getNome(),remedio.getDosagem(),
+                    remedio.getFormato(),R.layout.botao_remedio_completo);
         }
     }
     public  void AtualizarBotoes(String orderColuna, String ordem)
@@ -225,23 +215,8 @@ public class remedioActivity extends AppCompatActivity implements AdapterView.On
         LayoutButton.removeAllViews();
         for(int i = 0; i<remedios.size(); i++)
         {
-            ViewStub stub = new ViewStub(this);
-            stub.setLayoutResource(R.layout.botao_exame_completo);
-            LayoutButton.addView(stub);
-            View inflated = stub.inflate();
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)inflated.getLayoutParams();
-            params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
-            Button b = inflated.findViewById(R.id.buttonPerfil);
-            b.setTag(remedios.get(i).getId());
-            TextView t1 = inflated.findViewById(R.id.textView1);
-            t1.setText(remedios.get(i).getNome());
-            t1.setWidth(LayoutButton.getWidth()/2);
-            TextView t2 = inflated.findViewById(R.id.textView2 );
-            t2.setText(remedios.get(i).getDosagem());
-            t2.setWidth(LayoutButton.getWidth()/2);
-            TextView t3 = inflated.findViewById(R.id.textView3 );
-            t3.setText(remedios.get(i).getFormato());
-            t3.setWidth(LayoutButton.getWidth()/2);
+            funcoes.CriarBotoes(this,LayoutButton,remedios.get(i).getId(),remedios.get(i).getNome(),
+                    remedios.get(i).getDosagem(),remedios.get(i).getFormato(),R.layout.botao_remedio_completo);
         }
     }
     @Override

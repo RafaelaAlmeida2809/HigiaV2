@@ -7,33 +7,21 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-
 import java.util.List;
 import dataBase.DadosMedicosOpenHelper;
-import dataBase.DadosUsuariosOpenHelper;
 import dataBase.Medico;
-import dataBase.Usuario;
 
 public class medicoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
@@ -44,16 +32,21 @@ public class medicoActivity extends AppCompatActivity implements AdapterView.OnI
     int IdUsuarioAtual;
     String colunaOrdenar;
     String ordemOrdenar;
+    FuncoesCompartilhadas funcoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medico);
-        //Verificar Loguin
+
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
         FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        IdUsuarioAtual =  funcao.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
         // atribuindo Views
         spinner1 = findViewById(R.id.spinnerMedico1);
@@ -76,14 +69,17 @@ public class medicoActivity extends AppCompatActivity implements AdapterView.OnI
                             Intent data = result.getData();
                             AtualizarBotoes(colunaOrdenar, ordemOrdenar);
                         }
+                        else {
+                            AtualizarBotoes(colunaOrdenar, ordemOrdenar);
+                        }
                     }
                 });
     }
 
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
 
     public void AbrirAbaInicial(View v){
@@ -91,20 +87,22 @@ public class medicoActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void AbrirAbaAdicionarMedico(View v) {
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("idMedico",null);
         Intent adicionarMedicoActivity = new Intent(this, adicionarMedicoActivity.class);
         adicionarMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarMedicoActivity);
+        activityResultLauncher.launch(adicionarMedicoActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarMedicoActivity.class,"idMedico",null));
     }
 
     public  void AbrirAbaPerfilMedico(View v){
         //Codigo responsavel por enviar os dados e instanciar a nova Activity
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("idMedico",v.getTag().toString());
         Intent perfilMedicoActivity = new Intent(this, perfilMedicoActivity.class);
         perfilMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilMedicoActivity);;
+        activityResultLauncher.launch(perfilMedicoActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,perfilMedicoActivity.class,"idMedico",v.getTag().toString()));
     }
 
     public  void AtualizarBotoes(String orderColuna, String ordem){

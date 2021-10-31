@@ -7,46 +7,32 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.provider.AlarmClock;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
-import dataBase.DadosConsultasOpenHelper;
-import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
 import dataBase.DadosRemediosOpenHelper;
-import dataBase.DadosUsuariosOpenHelper;
-import dataBase.Exame;
 import dataBase.Medico;
 import dataBase.Remedio;
-import dataBase.Usuario;
 
 public class adicionarRemedioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,MyInterface {
     List<String> nome_Medicos = new ArrayList();
@@ -87,17 +73,20 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
     Calendar calendar;
     TimePickerDialog timePickerDialog;
     List<String> listaHoras = new ArrayList();
+    FuncoesCompartilhadas funcoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adicionar_remedio);
 
-        //Verificar Loguin
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
+        IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -126,8 +115,8 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
 
 
         //Carregar spinners
-        funcao.CriarSpinner(this,spinnerMesInicio,R.array.meses_array,null);
-        funcao.CriarSpinner(this,spinnerMesFim,R.array.meses_array,null);
+        funcoes.CriarSpinner(this,spinnerMesInicio,R.array.meses_array,null);
+        funcoes.CriarSpinner(this,spinnerMesFim,R.array.meses_array,null);
 
         //Mascara Horario
         SimpleMaskFormatter mascaraHorario = new SimpleMaskFormatter("NN:NN");
@@ -166,52 +155,51 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
                 });
     }
 
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
 
-    public void AtualizarMedicos()
-    {
+    public void AtualizarMedicos() {
         DadosMedicosOpenHelper DMOH = new DadosMedicosOpenHelper(getApplicationContext());
         List<Medico> medicos = DMOH.BuscaMedicos("nome","ASC",IdUsuarioAtual);
         tamanhoLista = medicos.size();
         nome_Medicos.clear();
         nome_Medicos.add(getResources().getString(R.string.selecione_medico));
+        id_Medicos.clear();
         id_Medicos.add(0);
-        for(int i = 0; i<medicos.size(); i++)
-        {
+        for(int i = 0; i<medicos.size(); i++) {
             nome_Medicos.add(medicos.get(i).getNome());
             id_Medicos.add(medicos.get(i).getId());
         }
         nome_Medicos.add(getResources().getString(R.string.adicione_medico));
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.CriarSpinner(this,spinner,-1,nome_Medicos);
+        funcoes.CriarSpinner(this,spinner,-1,nome_Medicos);
     }
     public void RetornoModal(boolean resultado){
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
         if(resultado) {
             if(acao.equals("Despertador")){
                 Toast.makeText(getApplicationContext(), R.string.aguarde, Toast.LENGTH_SHORT).show();
                 AdicionarDespertador(valorI);
+            }
+            if(acao.equals("Voltar")){
+                VoltarAbaAnterior();
             }
         }
         else {
             if(acao.equals("Despertador")) {
                 if (listaHoras.size() > (valorI + 1)) {
                     valorI = valorI+1;
-                    funcao.ModalConfirmacao(getResources().getString(R.string.titulo_despertador),(getResources().getString(R.string.texto_despertador)+" " + listaHoras.get(valorI) +"?"),this,this);
+                    funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_despertador),(getResources().getString(R.string.texto_despertador)+" " + listaHoras.get(valorI) +"?"),this,this);
                 } else {
-                    VoltarAbaAnterior(null);
+                    VoltarAbaAnterior();
                 }
             }
         }
     }
     public void ModalVoltar(View v){
         acao="Voltar";
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
+        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
     }
 
     public void AbrirAbaAdicionarMedico() {
@@ -221,7 +209,7 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
         adicionarMedicoActivity.putExtras(bundle);
         activityResultLauncher.launch(adicionarMedicoActivity);
     }
-    public  void VoltarAbaAnterior(View v)
+    public  void VoltarAbaAnterior()
     {
         Intent intent = new Intent();
         intent.putExtra("retorno","Voltei");
@@ -324,13 +312,17 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
 
                     if (funcaoRecebida == "Editar") {
                         DROH.EditarRemedio(Integer.parseInt(idRemedio), remedio, IdUsuarioAtual);
+
                     } else {
                         DROH.AdicionarNovoRemedio(remedio);
-                        if (listaHoras.size() > 0) {
-                            valorI = 0;
-                            FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-                            funcao.ModalConfirmacao(getResources().getString(R.string.titulo_despertador),(getResources().getString(R.string.texto_despertador)+" " + listaHoras.get(valorI) +"?"),this,this);
-                        }
+                    }
+                    if (listaHoras.size() > 0) {
+                        valorI = 0;
+                        acao = "Despertador";
+                        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_despertador),(getResources().getString(R.string.texto_despertador)+" " + listaHoras.get(valorI) +"?"),this,this);
+                    }
+                    else {
+                        VoltarAbaAnterior();
                     }
                     DROH.close();
                 } else {
@@ -353,18 +345,21 @@ public class adicionarRemedioActivity extends AppCompatActivity implements Adapt
     public void AdicionarDespertador(int i){
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
         String[] Hora = listaHoras.get(i).split(":");
+        ArrayList<Integer> dias = new ArrayList<Integer>();
+        Collections.addAll(dias,Calendar.SUNDAY,Calendar.MONDAY,Calendar.TUESDAY,Calendar.WEDNESDAY,Calendar.THURSDAY,Calendar.FRIDAY,Calendar.SATURDAY);
+        intent.putExtra(AlarmClock.EXTRA_DAYS,Integer.parseInt(Hora[0]));
         intent.putExtra(AlarmClock.EXTRA_HOUR,Integer.parseInt(Hora[0]));
         intent.putExtra(AlarmClock.EXTRA_MINUTES,Integer.parseInt(Hora[1]));
         intent.putExtra(AlarmClock.EXTRA_MESSAGE,R.string.hora_tomar + " " + textNomeRemedio.getText() +" "+ textDosagemRemedio.getText() +" "+textFormatoRemedio.getText());
         intent.setFlags(intent.FLAG_FROM_BACKGROUND);
+        //startService(intent);
         startActivity(intent);
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
         if(listaHoras.size()> (i+1)){
             valorI = i+1;
-            funcao.ModalConfirmacao(getResources().getString(R.string.titulo_despertador),(getResources().getString(R.string.texto_despertador)+" " + listaHoras.get(i) +"?"),this,this);
+            funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_despertador),(getResources().getString(R.string.texto_despertador)+" " + listaHoras.get(i) +"?"),this,this);
         }
         else {
-            VoltarAbaAnterior(null);
+            VoltarAbaAnterior();
         }
 
     }

@@ -7,33 +7,19 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.text.Normalizer;
 
 import dataBase.Consulta;
 import dataBase.DadosConsultasOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
-import dataBase.DadosRemediosOpenHelper;
-import dataBase.DadosUsuariosOpenHelper;
 import dataBase.Medico;
-import dataBase.Remedio;
-import dataBase.Usuario;
 
 public class perfilConsultaActivity extends AppCompatActivity implements MyInterface{
     private FrameLayout imagemModal;
@@ -46,16 +32,20 @@ public class perfilConsultaActivity extends AppCompatActivity implements MyInter
     ActivityResultLauncher<Intent> activityResultLauncher;
     int IdUsuarioAtual;
     Medico thisMedico;
+    FuncoesCompartilhadas funcoes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_consulta);
 
-        //Verificar Loguin
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
         FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        IdUsuarioAtual =  funcao.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -80,15 +70,15 @@ public class perfilConsultaActivity extends AppCompatActivity implements MyInter
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
                             Intent data = result.getData();
-                            AtualizarTextPerfil();
+                            ReiniciarAba();
                         }
                     }
                 });
     }
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
     public void AbrirAbaConsulta(View v) {
         Intent intent = new Intent();
@@ -121,21 +111,26 @@ public class perfilConsultaActivity extends AppCompatActivity implements MyInter
         DCOH.close();
         AbrirAbaConsulta(null);
     }
-
+    public void ReiniciarAba() {
+        startActivity(funcoes.BundleActivy(this,perfilConsultaActivity.class,"idConsulta",idConsulta));
+        finish();
+    }
     public void EditarConsulta(View v)
     {
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("idConsulta",idConsulta);
         Intent adicionarConsultaActivity = new Intent(this, adicionarConsultaActivity.class);
         adicionarConsultaActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarConsultaActivity);
+        activityResultLauncher.launch(adicionarConsultaActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarConsultaActivity.class,"idConsulta",idConsulta));
     }
     public void AbrirPerfilMedico (View v){
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("idMedico",idMedico);
         Intent perfilMedicoActivity = new Intent(this, perfilMedicoActivity.class);
         perfilMedicoActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilMedicoActivity);
+        activityResultLauncher.launch(perfilMedicoActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,perfilMedicoActivity.class,"idMedico",idMedico));
     }
     public void AbrirGoogleMaps(View v)
     {

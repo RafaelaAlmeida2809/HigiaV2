@@ -159,27 +159,7 @@ public class DadosExamesOpenHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
         return true;
     }
-   /* public List<Integer> buscaIdExamesString(String nome,String valor,String ordem) {
-        SQLiteDatabase db = getReadableDatabase();
-        String sql = "SELECT id FROM exame WHERE " + nome + " = '" + valor + "' ORDER BY "+nome+" COLLATE NOCASE " + ordem +";";
-        Cursor c = db.rawQuery(sql, null);
-        List<Integer> exames = new ArrayList<Integer>();
-        while (c.moveToNext()) {
-            exames.add(c.getInt(c.getColumnIndex("id")));
-        }
-        return exames;
-    }
-    public List<Integer> buscaIdExamesInt(String nome,int valor,String ordem) {
-        SQLiteDatabase db = getReadableDatabase();
-        String sql = "SELECT * FROM exame WHERE " + nome + " = " + valor + " ORDER BY "+nome+" COLLATE NOCASE " + ordem +";";
-        Cursor c = db.rawQuery(sql, null);
-        List<Integer> exames = new ArrayList<Integer>();
-        while (c.moveToNext()) {
-            exames.add(c.getInt(c.getColumnIndex("id")));
-        }
-        return exames;
-    }
-    */
+
    public List<Integer> buscaIdExames(String nome,String valor,String ordem, int idUsuarioAtual) {
 
         SQLiteDatabase db = getReadableDatabase();

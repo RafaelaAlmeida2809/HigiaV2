@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".LoguinActivity">
+    tools:context=".LoginActivity">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/mensagem_loguin"
+        android:text="@string/mensagem_login"
         android:textColor="#14B876"
         android:textSize="20sp"
         android:layout_marginTop="10dp"

@@ -1,23 +1,21 @@
 package br.com.higiaorganizadordasaude;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
 
+import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -25,11 +23,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,16 +40,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,10 +54,8 @@ import java.util.List;
 
 import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
-import dataBase.DadosUsuariosOpenHelper;
 import dataBase.Exame;
 import dataBase.Medico;
-import dataBase.Usuario;
 
 public class adicionarExameActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MyInterface  {
 
@@ -95,16 +89,20 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
     List<Integer> id_Medicos = new ArrayList();
     List<Button> ListaImagensPhotos = new ArrayList<>();
     List<Uri> photoUri = new ArrayList<>();
+    FuncoesCompartilhadas funcoes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adicionar_exame);
 
-        //Verificar Loguin
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
+        IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -118,7 +116,7 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
         scrollFundo = findViewById(R.id.scrollFundo);
         modalImagem = findViewById(R.id.modalImagem);
         //Carregar spinners
-        funcao.CriarSpinner(this,spinnerMes,R.array.meses_array,null);
+        funcoes.CriarSpinner(this,spinnerMes,R.array.meses_array,null);
 
         //Recebe idExame em caso de edição
         Bundle bundle = getIntent().getExtras();
@@ -167,6 +165,127 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
                                 quantidadeImagens++;
                                 BuscandoImagem = false;
                             }
+                            else if(buscandoPDF)
+                            {
+                                Uri uri = data.getData();
+
+                                String uriString = uri.getPath();
+                                Toast.makeText(getApplicationContext(),"1   "+uriString, Toast.LENGTH_SHORT).show();
+                                String stringUriPdf="";
+                                stringUriPdf = funcoes.getPathFromUri(getApplicationContext(),uri);
+                                try{
+                                    File f = new File(stringUriPdf);
+                                    Uri teste = Uri.fromFile(f);
+                                    Toast.makeText(getApplicationContext(),"2   "+teste.getPath(), Toast.LENGTH_SHORT).show();
+
+                                    Toast.makeText(getApplicationContext(),"3   "+f.getPath(), Toast.LENGTH_SHORT).show();
+                                } catch (Exception e) {
+                                    Toast.makeText(getApplicationContext(),"erro3", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
+
+
+                                try{
+                                    //abrirPdf(uri);
+                                } catch (Exception e) {
+                                    Toast.makeText(getApplicationContext(),"erro1", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
+
+                                Uri arquivo= null;
+                                boolean a=false;
+                                boolean b=false;
+                                boolean c=false;
+                                try{
+
+                                     uriString = uri.toString();
+                                    File myFile = new File(uriString);
+                                    arquivo = Uri.fromFile(myFile);
+                                    Toast.makeText(getApplicationContext(),"4   "+myFile.getPath(), Toast.LENGTH_SHORT).show();
+                                    c=true;
+                                }catch (Exception e) {
+                                    Toast.makeText(getApplicationContext(), "erronovo1", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                 }
+                                if(c) {
+                                    try {
+
+                                        abrirPdf(arquivo);
+                                    } catch (Exception e) {
+                                        Toast.makeText(getApplicationContext(), "erronovo2", Toast.LENGTH_SHORT).show();
+                                        e.printStackTrace();
+                                    }
+                                }
+                                /*try{
+                                    File f = new File(uriString);
+                                    arquivo = Uri.fromFile(f);
+                                    c=true;
+                                }catch (Exception e) {
+                                    Toast.makeText(getApplicationContext(), "erronovo1", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
+                                if(c) {
+                                    try {
+                                        abrirPdf(arquivo);
+                                    } catch (Exception e) {
+                                        Toast.makeText(getApplicationContext(), "erronovo2", Toast.LENGTH_SHORT).show();
+                                        e.printStackTrace();
+                                    }
+                                }
+                                try{
+                                    FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
+                                     stringUriPdf = funcao.getPathFromUri(getApplicationContext(),uri);
+                                    Toast.makeText(getApplicationContext(),stringUriPdf, Toast.LENGTH_SHORT).show();
+                                    a=true;
+                                } catch (Exception e) {
+                                    Toast.makeText(getApplicationContext(),"erro2", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
+                                if(a){
+                                    try{
+                                        File f = new File(stringUriPdf);
+                                        arquivo = Uri.fromFile(f);
+                                        b=true;
+                                    } catch (Exception e) {
+                                        Toast.makeText(getApplicationContext(),"erro3", Toast.LENGTH_SHORT).show();
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if(b) {
+                                    try {
+                                        abrirPdf(arquivo);
+                                    } catch (Exception e) {
+                                        Toast.makeText(getApplicationContext(), "erro4", Toast.LENGTH_SHORT).show();
+                                        e.printStackTrace();
+                                    }
+                                }*/
+
+                                //String uriString = uri.toString();
+                                //abrirPdf(uriString);
+
+                                //String uriString = uri.toString();
+                                //File myFile = new File(uriString);
+                                //String path = myFile.getAbsolutePath();
+                                //getPath(getApplicationContext(),uri );
+                                try{
+                                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                                }
+                                catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+
+                                String displayName = "";
+
+
+                                /*ListaImagensPhotos.get(quantidadeImagens).setBackgroundResource(R.mipmap.higia_logo);
+                                RegularImagem(ListaImagensPhotos.get(quantidadeImagens));
+                                Toast.makeText(getApplicationContext(),"3"+ displayName, Toast.LENGTH_SHORT).show();
+                                photoUri.add(Uri.parse(displayName));
+                                quantidadeImagens++;
+                                buscandoPDF = false;
+
+                                abrirPdf(myFile);*/
+                            }
                             else if(AdicionandoMedico){
                                 AtualizarMedicos();
                                 AdicionandoMedico = false;
@@ -176,13 +295,22 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
                         TirandoImagem = false;
                         BuscandoImagem = false;
                         AdicionandoMedico = false;
+                        buscandoPDF=false;
                     }
                 });
     }
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void abrirPdf(Uri uri){
+        Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
+        pdfIntent.setDataAndType(uri,"application/pdf");
+        pdfIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(Intent.createChooser(pdfIntent, "escolha"));
+
+
+    }
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
 
     public void salvarImagens(int idExame){
@@ -275,8 +403,7 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
             id_Medicos.add(medicos.get(i).getId());
         }
         nome_Medicos.add(getResources().getString(R.string.adicione_medico));
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.CriarSpinner(this,spinner,-1,nome_Medicos);
+        funcoes.CriarSpinner(this,spinner,-1,nome_Medicos);
         DMOH.close();
     }
 
@@ -376,7 +503,11 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
 
     public void AbrirGaleriaPDF(View v){
         if(!Ocupado) {
-            Toast.makeText(getApplicationContext(), "Ainda em desenvolvimento", Toast.LENGTH_SHORT).show();
+            Intent intentPDF = new Intent(Intent.ACTION_GET_CONTENT);
+            intentPDF.addCategory(Intent.CATEGORY_OPENABLE);
+            intentPDF.setType("application/pdf");
+            buscandoPDF = true;
+            activityResultLauncher.launch(Intent.createChooser(intentPDF, "Select Picture"));
         }
     }
 
@@ -481,13 +612,11 @@ public class adicionarExameActivity extends AppCompatActivity implements Adapter
     }
 
     public void ModalVoltar(View v){
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
+        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
     }
     public void ModalExcluir(View v){
         excluindo = true;
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_excluir_Imagem),getResources().getString(R.string.texto_excluir_Imagem),this,this);
+        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_excluir_Imagem),getResources().getString(R.string.texto_excluir_Imagem),this,this);
     }
     public void RetornoModal(boolean resultado){
        if(resultado) {

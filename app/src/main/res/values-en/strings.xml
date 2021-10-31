@@ -103,7 +103,7 @@
     <string name="quantidade_de_remedio">Medicament Quantity:</string>
     <string name="organizar_por_medicos">Organize by Doctors</string>
     <string name="logar_com_google">Login with Google</string>
-    <string name="mensagem_loguin">Login to continue</string>
+    <string name="mensagem_login">Login to continue</string>
     <string name="nome">Name:</string>
     <string name="email">Email:</string>
     <string name="Consulta">APPOINTMENT</string>
@@ -167,12 +167,13 @@
     <string name="titulo_deletarConta">Delete account in app</string>
     <string name="texto_deletarConta">Are you sure you want to delete this account?</string>
     <string name="texto_deletarConta2">This action is irreversible and will delete all files that are not saved in your gallery</string>
+    <string name="texto_autorizacaoCalendario">Allow Higia to access your calendar?</string>
 
 
 
 
-
-
+    <string name="permissao_aceita">Permission Accepted</string>
+    <string name="permissao_negada">Permission denied</string>
     <string name="hora_tomar">Time to take</string>
     <string name="ano_valido">Please enter a valid year!</string>
     <string name="dia_valido">Please enter a valid day!</string>

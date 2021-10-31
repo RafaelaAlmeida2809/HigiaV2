@@ -5,40 +5,31 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.TimePickerDialog;
-import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,11 +39,7 @@ import java.util.List;
 import dataBase.Consulta;
 import dataBase.DadosConsultasOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
-import dataBase.DadosRemediosOpenHelper;
-import dataBase.DadosUsuariosOpenHelper;
 import dataBase.Medico;
-import dataBase.Remedio;
-import dataBase.Usuario;
 
 public class adicionarConsultaActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,MyInterface{
     Spinner spinner;
@@ -78,16 +65,22 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
     TimePickerDialog timePickerDialog;
     int IdUsuarioAtual;
     String acao;
+    boolean permitido;
+    private int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    FuncoesCompartilhadas funcoes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adicionar_consulta);
 
-        //Verificar Loguin
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
+        IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -99,7 +92,7 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
         textNomePagina = findViewById(R.id.textNomePagina);
 
         //Carregar spinners
-        funcao.CriarSpinner(this,spinnerMesInicio,R.array.meses_array,null);
+        funcoes.CriarSpinner(this,spinnerMesInicio,R.array.meses_array,null);
 
         //Mascara Horario
         SimpleMaskFormatter mascaraHorario = new SimpleMaskFormatter("NN:NN");
@@ -118,7 +111,21 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
             CarregarConsulta();
         }
 
-        //Retorno da activity
+        /*//Pedir permissão
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(adicionarConsultaActivity.this,new String[]{Manifest.permission.READ_CALENDAR},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        }
+        if( ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(adicionarConsultaActivity.this, new String[]{Manifest.permission.WRITE_CALENDAR},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        }
+        else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+        permitido = true;
+            Toast.makeText(this, "Todas as permissões ok", Toast.LENGTH_LONG).show();
+        }*/
+            //Retorno da activity
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
@@ -135,15 +142,15 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
                         else if(salvandoAgenda)
                         {
                             salvandoAgenda = false;
-                            VerificarAgenda();
+                            //VerificarAgenda();
                         }
                     }
                 });
     }
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
     public void AtualizarMedicos()
     {
@@ -152,6 +159,7 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
         tamanhoLista = medicos.size();
         nome_Medicos.clear();
         nome_Medicos.add(getResources().getString(R.string.selecione_medico));
+        id_Medicos.clear();
         id_Medicos.add(0);
         for(int i = 0; i<medicos.size(); i++)
         {
@@ -159,8 +167,7 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
             id_Medicos.add(medicos.get(i).getId());
         }
         nome_Medicos.add(getResources().getString(R.string.adicione_medico));
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.CriarSpinner(this,spinner,-1,nome_Medicos);
+        funcoes.CriarSpinner(this,spinner,-1,nome_Medicos);
         DMOH.close();
     }
     public void AbrirAbaAdicionarMedico() {
@@ -172,49 +179,15 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
     }
     public void ModalVoltar(View v){
         acao="Voltar";
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
+        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
     }
-    public void VerificarAgenda(){
-        Toast.makeText(this, idCalendarioAtual, Toast.LENGTH_LONG).show();
-        try {
-            Uri UriEvento = null;
-            UriEvento = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.parseLong(idCalendarioAtual));
-            Toast.makeText(this, UriEvento +"", Toast.LENGTH_LONG).show();
-            consulta.setIdCalendario(idCalendarioAtual);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            consulta.setIdCalendario("12");
-            Toast.makeText(this, "Erro ao Salvar evento", Toast.LENGTH_LONG).show();
-        }
-        DadosConsultasOpenHelper DCOH = new DadosConsultasOpenHelper(getApplicationContext());
-        if(idConsulta != null && idConsulta != "") {
-            DCOH.EditarConsulta(Integer.parseInt(idConsulta), consulta, IdUsuarioAtual);
-        }
-        else {
-            idConsultaInt = (int) DCOH.AdicionarNovaConsulta(consulta);
-        }
-        DCOH.close();
-        VoltarAbaAnterior();
-    }
+
     public void AbrirRelogio(View v) {
         Button b = findViewById(v.getId());
         timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
             b.setText(String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute));
         }, 0, 0, true);
         timePickerDialog.show();
-    }
-    public void EditarNaAgenda() {
-        try {
-            /*ContentResolver cr = getContentResolver();
-            Uri UriEvento = null;
-            UriEvento = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.parseLong(String.valueOf(idConsultaInt)));
-            int rows = cr.delete(UriEvento, null, null);
-            Toast.makeText(this, "Editado!", Toast.LENGTH_LONG).show();*/
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Erro ao deletar evento", Toast.LENGTH_LONG).show();
-        }
     }
     public void AdicionarNaAgenda(String Acao) {
 
@@ -224,10 +197,27 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
         String idCalendario = "12";
         if (Acao == "Editar" && idCalendarioAtual.length() > 6) {
             intent = new Intent(Intent.ACTION_EDIT);
-            //uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.parseLong(idCalendarioAtual));
-            uri = Uri.parse("content://com.android.calendar/events/" + idCalendarioAtual);
+            uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.parseLong(idCalendarioAtual));
+            //uri = Uri.parse("content://com.android.calendar/events/" + idCalendarioAtual);
             idCalendario = idCalendarioAtual;
+            Long Id = null;
 
+                Id = Long.parseLong(idCalendarioAtual);
+                Toast.makeText(this, Id+"", Toast.LENGTH_LONG).show();
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+
+                        Cursor cursor = getContentResolver().query(CalendarContract.Events.CONTENT_URI, null, null, null, null);
+                        while (cursor.moveToNext()) {
+                            if (cursor.getColumnIndex(CalendarContract.Events._ID) == Id) {
+                                Toast.makeText(this, "Achou", Toast.LENGTH_LONG).show();
+                            } else if (cursor.getColumnName(cursor.getColumnIndex(CalendarContract.Events._ID)) == idCalendarioAtual) {
+                                Toast.makeText(this, "Achou2", Toast.LENGTH_LONG).show();
+                            }
+
+                }
+            }
         }
         else {
             intent = new Intent(Intent.ACTION_INSERT);
@@ -273,6 +263,7 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
         setResult(RESULT_OK, intent);
         activityResultLauncher.launch(intent);
     }
+
     public  void VoltarAbaAnterior()
     {
         Intent intent = new Intent();
@@ -280,6 +271,7 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
         setResult(RESULT_OK,intent);
         this.finish();
     }
+
     public void RetornoModal(boolean resultado){
         if(resultado) {
             if(acao.equals("Voltar")){
@@ -287,7 +279,11 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
             }
             else if(acao.equals("Calendario")) {
                 Toast.makeText(getApplicationContext(), "Aguarde...", Toast.LENGTH_SHORT).show();
-                AdicionarNaAgenda("Criar");
+                AdicionarNaAgenda("Criar");;
+                DadosConsultasOpenHelper DCOH = new DadosConsultasOpenHelper(getApplicationContext());
+                idConsultaInt = (int) DCOH.AdicionarNovaConsulta(consulta);
+                DCOH.close();
+                VoltarAbaAnterior();
             }
         }
         else {
@@ -301,6 +297,7 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
         }
         acao = "";
     }
+
     public  void CarregarConsulta()
     {
         funcaoRecebida = "Editar";
@@ -341,8 +338,9 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
                         AdicionarNaAgenda("Editar");
                     } else {
                         acao = "Calendario";
-                        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-                        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_addConsulta),getResources().getString(R.string.texto_addConsulta),this,this);
+                        //if(permitido) {
+                        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_addConsulta), getResources().getString(R.string.texto_addConsulta), this, this);
+                        //}
                     }
                     DCOH.close();
                 } else {
@@ -378,6 +376,20 @@ public class adicionarConsultaActivity extends AppCompatActivity implements Adap
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getApplicationContext(), R.string.permissao_aceita, Toast.LENGTH_SHORT).show();
+                permitido = true;
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.permissao_negada, Toast.LENGTH_SHORT).show();
+                permitido = false;
+            }
+            return;
+        }
     }
     @Override
     public void onBackPressed(){

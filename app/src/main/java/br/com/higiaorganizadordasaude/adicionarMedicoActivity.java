@@ -8,10 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -21,11 +18,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.ContactsContract;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,17 +30,10 @@ import android.widget.Toast;
 
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -56,20 +43,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
-import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
-import dataBase.DadosUsuariosOpenHelper;
 import dataBase.Medico;
-import dataBase.Usuario;
 
 
 public class adicionarMedicoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MyInterface  {
@@ -98,16 +78,21 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
     String funcaoRecebida;
     String valorJson ="";
     URL urlCep;
+    FuncoesCompartilhadas funcoes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adicionar_medico);
 
-        //Verificar Loguin
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
+
+        IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -193,10 +178,10 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                 });
     }
 
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
 
     public  void VoltarAbaAnterior(){
@@ -206,8 +191,7 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
         this.finish();
     }
     public void AbrirModalVoltar(View v){
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
+        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_voltarPagina),getResources().getString(R.string.texto_voltarPagina),this,this);
     }
     public void RetornoModal(boolean resultado){
         if(resultado) {
@@ -299,7 +283,6 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
 
                                 }
                                 try {
-
                                     BitmapDrawable bitmapDrawable = (BitmapDrawable) imagemMedico.getBackground();
                                     Bitmap bitmap = bitmapDrawable.getBitmap();
                                     FileOutputStream out = new FileOutputStream(photoFile);
@@ -326,8 +309,10 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
                     {
                         medico.setUriImagem("");
                     }
-                    if (funcaoRecebida == "Editar" && !ErroImagem) {
-                        DMOH.EditarMedico(Integer.parseInt(idMedico), medico,IdUsuarioAtual);
+                    if (funcaoRecebida == "Editar") {
+                        if(!ErroImagem) {
+                            DMOH.EditarMedico(Integer.parseInt(idMedico), medico, IdUsuarioAtual);
+                        }
                     }
                     else {
                         DMOH.AdicionarNovoMedico(medico);
@@ -367,7 +352,7 @@ public class adicionarMedicoActivity extends AppCompatActivity implements Adapte
             textCep.setText(medico.getCep() + "");
         }
         textNumero.setText(medico.getNumero() + "");
-        if( medico.getUriImagem() != null ||  medico.getUriImagem() != "") {
+        if( medico.getUriImagem() != null &&  !medico.getUriImagem().equals("")) {
             try {
                 File f = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.pathSeparator + medico.getUriImagem());
                 Uri selectedImageUri = FileProvider.getUriForFile(this, getResources().getString(R.string.caminho_imagem), f);

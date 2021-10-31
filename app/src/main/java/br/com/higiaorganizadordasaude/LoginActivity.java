@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,7 +44,7 @@ import dataBase.DadosRemediosOpenHelper;
 import dataBase.DadosUsuariosOpenHelper;
 import dataBase.Usuario;
 
-public class LoguinActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class LoginActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     ActivityResultLauncher<Intent> activityResultLauncher;
     private GoogleSignInClient mGoogleSignInClient;
@@ -55,6 +54,8 @@ public class LoguinActivity extends AppCompatActivity implements AdapterView.OnI
     Spinner spinnerLinguagem;
     int linguaremEscolhida;
     boolean primeiro = true;
+    FuncoesCompartilhadas funcoes;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -69,9 +70,12 @@ public class LoguinActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_loguin);
+        setContentView(R.layout.activity_login);
 
-        //Verificar Loguin
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
         mAuth = FirebaseAuth.getInstance();
         createRequest();
         FirebaseUser usuario = mAuth.getCurrentUser();
@@ -85,8 +89,7 @@ public class LoguinActivity extends AppCompatActivity implements AdapterView.OnI
         spinnerLinguagem =findViewById(R.id.spinnerLinguagem);
 
         //Carregar spinners
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.CriarSpinner(this,spinnerLinguagem,R.array.linguagens,null);
+        funcoes.CriarSpinner(this,spinnerLinguagem,R.array.linguagens,null);
 
         //Atualizar Linguagem
         String[] siglaLinguagem = getResources().getStringArray(R.array.linguagenSigla);
@@ -115,7 +118,7 @@ public class LoguinActivity extends AppCompatActivity implements AdapterView.OnI
                                 firebaseAuthWithGoogle(account.getIdToken());
                             } catch (ApiException e) {
                                 // Google Sign In failed, update UI appropriately
-                                Toast.makeText(getApplicationContext(), "Erro no loguin", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Error login", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -237,7 +240,7 @@ public class LoguinActivity extends AppCompatActivity implements AdapterView.OnI
 
     }
     public  void AtualizarPagina(){
-        Intent intent = new Intent(getApplicationContext(),LoguinActivity.class);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
         startActivity(intent);
     }

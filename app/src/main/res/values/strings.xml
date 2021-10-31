@@ -104,7 +104,7 @@
     <string name="quantidade_de_remedio">Quantidade de Remédio:</string>
     <string name="organizar_por_medicos">Organizar por Medicos</string>
     <string name="logar_com_google">Logar com google</string>
-    <string name="mensagem_loguin">Faça o login para continuar</string>
+    <string name="mensagem_login">Faça o login para continuar</string>
     <string name="nome">Nome:</string>
     <string name="email">Email:</string>
     <string name="Consulta">CONSULTA</string>
@@ -168,8 +168,10 @@
     <string name="titulo_deletarConta">Deletar conta no aplicativo</string>
     <string name="texto_deletarConta">Você tem certeza que deseja deletar essa conta?</string>
     <string name="texto_deletarConta2">Esta ação é irreversivel e deletará todos os arquivos que não estiverem salvos em sua galeria</string>
+    <string name="texto_autorizacaoCalendario">Permitir que Higia acesse sua agenda?</string>
 
-
+    <string name="permissao_aceita">Permissão Aceita</string>
+    <string name="permissao_negada">Permissão Negada</string>
     <string name="hora_tomar">Hora de tomar</string>
     <string name="ano_valido">Por favor, digite um ano válido</string>
     <string name="dia_valido">Por favor, digite um Dia valido</string>

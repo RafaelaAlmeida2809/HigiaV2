@@ -157,27 +157,6 @@ public class DadosRemediosOpenHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
         return true;
     }
-    /*
-    public List<Integer> buscaIdRemedioString(String nome,String valor,String ordem) {
-        SQLiteDatabase db = getReadableDatabase();
-        String sql = "SELECT id FROM remedio WHERE " + nome + " = '" + valor + "' ORDER BY "+nome+" COLLATE NOCASE " + ordem +";";
-        Cursor c = db.rawQuery(sql, null);
-        List<Integer> remedios = new ArrayList<Integer>();
-        while (c.moveToNext()) {
-            remedios.add(c.getInt(c.getColumnIndex("id")));
-        }
-        return remedios;
-    }
-    public List<Integer> buscaIdRemedioInt(String nome,int valor,String ordem) {
-        SQLiteDatabase db = getReadableDatabase();
-        String sql = "SELECT * FROM remedio WHERE " + nome + " = " + valor + " ORDER BY "+nome+" COLLATE NOCASE " + ordem +";";
-        Cursor c = db.rawQuery(sql, null);
-        List<Integer> remedios = new ArrayList<Integer>();
-        while (c.moveToNext()) {
-            remedios.add(c.getInt(c.getColumnIndex("id")));
-        }
-        return remedios;
-    }*/
     public List<Integer> buscaIdRemedio(String nome,String valor,String ordem,int idUsuarioAtual) {
         SQLiteDatabase db = getReadableDatabase();
         String sql = "SELECT * FROM remedio WHERE " + nome + " = " + valor + " AND idUsuario = " + idUsuarioAtual + " ORDER BY "+nome+" COLLATE NOCASE " + ordem +";";

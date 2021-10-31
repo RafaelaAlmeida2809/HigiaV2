@@ -9,38 +9,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
-import dataBase.DadosUsuariosOpenHelper;
 import dataBase.Exame;
-import dataBase.Medico;
-import dataBase.Usuario;
+import dataBase.Remedio;
 
-public class exameActivity extends AppCompatActivity  implements AdapterView.OnItemSelectedListener{
+public class exameActivity extends AppCompatActivity  implements AdapterView.OnItemSelectedListener,MyInterface{
 
     ActivityResultLauncher<Intent> activityResultLauncher;
     CheckBox checkMedico;
@@ -54,17 +43,20 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
     List<ImageView> ListaImageSeta = new ArrayList<>();
     boolean abaMedicos = false;
     int IdUsuarioAtual;
+    FuncoesCompartilhadas funcoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exame);
 
-        //Verificar Loguin
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
+        IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -73,8 +65,8 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
         spinner2 = findViewById(R.id.spinnerExame2);
 
         //Carregar spinners
-        funcao.CriarSpinner(this,spinner1,R.array.ordenar_Exame_Coluna,null);
-        funcao.CriarSpinner(this,spinner2,R.array.ordenar_Ordem,null);
+        funcoes.CriarSpinner(this,spinner1,R.array.ordenar_Exame_Coluna,null);
+        funcoes.CriarSpinner(this,spinner2,R.array.ordenar_Ordem,null);
 
 
         //Inicia os componentes da pagina
@@ -96,14 +88,23 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
                                 FecharMedicos();
                             }
                         }
+                        else {
+                            if(!abaMedicos){
+                                AtualizarBotoes(colunaOrdenar, ordemOrdenar);
+                            }
+                            else {
+                                OrganizarPorMedicos(null);
+                                FecharMedicos();
+                            }
+                        }
                     }
                 });
     }
 
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
 
     public void AbrirAbaInicial(View v) {
@@ -112,20 +113,22 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
 
     public void AbrirAbaAdicionarExame(View v)
     {
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("idExame",null);
         Intent adicionarExameActivity = new Intent(this, adicionarExameActivity.class);
         adicionarExameActivity.putExtras(bundle);
-        activityResultLauncher.launch(adicionarExameActivity);
+        activityResultLauncher.launch(adicionarExameActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,adicionarExameActivity.class,"idExame",null));
     }
 
-    public void AbrirAbaPerfil(View v)
+    public void AbrirAbaPerfilExame(View v)
     {
-        Bundle bundle = new Bundle();
-        bundle.putString("idExame",v.getTag().toString());
+        /*Bundle bundle = new Bundle();
+        bundle.putString("idExame",);
         Intent perfilExameActivity = new Intent(this, perfilExameActivity.class);
         perfilExameActivity.putExtras(bundle);
-        activityResultLauncher.launch(perfilExameActivity);
+        activityResultLauncher.launch(perfilExameActivity);*/
+        activityResultLauncher.launch(funcoes.BundleActivy(this,perfilExameActivity.class,"idExame",v.getTag().toString()));
     }
 
     public  void OrganizarPorMedicos(View v) {
@@ -139,7 +142,10 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
         IdMedicos.clear();
         if (checkMedico.isChecked()) {
             for (int i = 0; i < NomeMedicos.size(); i++) {
-                ViewStub stub = new ViewStub(this);
+                int idMedicoAtual = DMOH.buscaIdMedico("nome", "'"+NomeMedicos.get(i)+"'", "ASC",IdUsuarioAtual).get(0);
+                funcoes.CriarExpansorMedico(this,LayoutButton,idMedicoAtual,NomeMedicos.get(i),ListaLinearMedicos,ListaImageSeta);
+                IdMedicos.add(idMedicoAtual);
+                /*ViewStub stub = new ViewStub(this);
                 stub.setLayoutResource(R.layout.expansor_layout);
                 LayoutButton.addView(stub);
                 View inflated = stub.inflate();
@@ -147,7 +153,7 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
                 params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
                 Button b = inflated.findViewById(R.id.buttonExpandir);
                 //b.setTag(DMOH.buscaIdMedicoString("nome", NomeMedicos.get(i), "ASC").get(0));
-                b.setTag(DMOH.buscaIdMedico("nome", "'"+NomeMedicos.get(i)+"'", "ASC",IdUsuarioAtual).get(0));
+                b.setTag(idMedicoAtual);
                 ImageView imageView = inflated.findViewById(R.id.imagemExpandir);
                 LinearLayout linearLayout = inflated.findViewById(R.id.LayoutButtonExame);
                 linearLayout.setVisibility(View.INVISIBLE);
@@ -155,7 +161,7 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
                 t1.setText(NomeMedicos.get(i));
                 ListaLinearMedicos.add(linearLayout);
                 ListaImageSeta.add(imageView);
-                IdMedicos.add(DMOH.buscaIdMedico("nome", "'"+NomeMedicos.get(i)+"'", "ASC",IdUsuarioAtual).get(0));
+                IdMedicos.add(idMedicoAtual);*/
                 //IdMedicos.add(DMOH.buscaIdMedicoString("nome", NomeMedicos.get(i), "ASC").get(0));
             }
             abaMedicos = true;
@@ -188,6 +194,7 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
             ListaLinearMedicos.get(i).removeAllViews();
         }
     }
+    public void RetornoModal(boolean a){}
 
 
     public  void AtualizarBotoesAbaMedicos(String orderColuna, String ordem,LinearLayout LayoutButton, int idMedicoAberto){
@@ -198,20 +205,9 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
         for(int i = 0; i<idExames.size(); i++)
         {
             Exame exame = DEOH.BuscaExame(idExames.get(i),IdUsuarioAtual);
-            ViewStub stub = new ViewStub(this);
-            stub.setLayoutResource(R.layout.botao_exame_completo);
-            LayoutButton.addView(stub);
-            View inflated = stub.inflate();
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)inflated.getLayoutParams();
-            params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
-            Button b = inflated.findViewById(R.id.buttonPerfil);
-            b.setTag(idExames.get(i));
-            TextView t1 = inflated.findViewById(R.id.textView1);
-            t1.setText(exame.getTipo());
-            TextView t2 = inflated.findViewById(R.id.textView2 );
-            t2.setText(exame.getParteCorpo());
-            TextView t3 = inflated.findViewById(R.id.textView3 );
-            t3.setText(((exame.getDia() == 0)? "":exame.getDia() + "/") + ((exame.getMes() == 0)? "":exame.getMes() + "/") + ((exame.getAno() == 0)? "":exame.getAno() ));
+            funcoes.CriarBotoes(this,LayoutButton,idExames.get(i),exame.getTipo(),exame.getParteCorpo(),
+                    ((exame.getDia() == 0)? "":exame.getDia() + "/") + ((exame.getMes() == 0)? "":exame.getMes() + "/") + ((exame.getAno() == 0)? "":exame.getAno() )
+            ,R.layout.botao_exame_completo);
         }
     }
 
@@ -223,20 +219,9 @@ public class exameActivity extends AppCompatActivity  implements AdapterView.OnI
         LayoutButton.removeAllViews();
         for(int i = 0; i<exames.size(); i++)
         {
-            ViewStub stub = new ViewStub(this);
-            stub.setLayoutResource(R.layout.botao_exame_completo);
-            LayoutButton.addView(stub);
-            View inflated = stub.inflate();
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)inflated.getLayoutParams();
-            params.setMargins(params.leftMargin, 5, params.rightMargin, params.bottomMargin);
-            Button b = inflated.findViewById(R.id.buttonPerfil);
-            b.setTag(exames.get(i).getId());
-            TextView t1 = inflated.findViewById(R.id.textView1);
-            t1.setText(exames.get(i).getTipo());
-            TextView t2 = inflated.findViewById(R.id.textView2 );
-            t2.setText(exames.get(i).getParteCorpo());
-            TextView t3 = inflated.findViewById(R.id.textView3 );
-            t3.setText(((exames.get(i).getDia() == 0)? "":exames.get(i).getDia() + "/") + ((exames.get(i).getMes() == 0)? "":exames.get(i).getMes() + "/") + ((exames.get(i).getAno() == 0)? "":exames.get(i).getAno() ));
+            funcoes.CriarBotoes(this,LayoutButton,exames.get(i).getId(),exames.get(i).getTipo(),
+                    exames.get(i).getParteCorpo(),((exames.get(i).getDia() == 0)? "":exames.get(i).getDia() + "/") + ((exames.get(i).getMes() == 0)? "":exames.get(i).getMes() + "/") + ((exames.get(i).getAno() == 0)? "":exames.get(i).getAno() )
+            ,R.layout.botao_exame_completo);
         }
     }
 

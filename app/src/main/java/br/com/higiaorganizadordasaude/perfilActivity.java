@@ -1,30 +1,17 @@
 package br.com.higiaorganizadordasaude;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,13 +19,9 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
-import java.util.Locale;
 
 import dataBase.DadosConsultasOpenHelper;
 import dataBase.DadosExamesOpenHelper;
@@ -66,17 +49,22 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
     boolean mudarLinguagem;
     String retorno = "";
     boolean segundo;
+    FuncoesCompartilhadas funcoes;
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
 
-        //Verificar Loguin
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        IdUsuarioAtual =  funcao.VerificarLoguin(this);
+        //atribuindo funcoes compartilhadas;
+        funcoes = new FuncoesCompartilhadas();
+
+        //Verificar Login
+        signInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        IdUsuarioAtual =  funcoes.VerificarLogin(this);
         if(IdUsuarioAtual == -1){
-            AbrirLoguin();
+            AbrirLogin();
         }
 
         // atribuindo Views
@@ -88,13 +76,13 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
         spinnerLinguagem =findViewById(R.id.spinnerLinguagem);
 
         //Carregar spinners
-        funcao.CriarSpinner(this,spinnerLinguagem,R.array.linguagens,null);
+        funcoes.CriarSpinner(this,spinnerLinguagem,R.array.linguagens,null);
 
     }
-    public void AbrirLoguin(){
-        Intent LoguinActivity = new Intent(getApplicationContext(),LoguinActivity.class);
+    public void AbrirLogin(){
+        Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
-        startActivity(LoguinActivity);
+        startActivity(LoginActivity);
     }
     public void VoltarAba(View v){
         finish();
@@ -102,23 +90,21 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
     public void AbrirModalDeslogar (View v)
     {
         retorno = "deslogar";
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_deslogarConta),getResources().getString(R.string.texto_deslogarConta), this, this);
+        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_deslogarConta),getResources().getString(R.string.texto_deslogarConta), this, this);
     }
     public  void AbrirModalDeletar(View v) {
         retorno = "deletar";
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.ModalConfirmacao(getResources().getString(R.string.titulo_deletarConta),getResources().getString(R.string.texto_deletarConta), this, this);
+        funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_deletarConta),getResources().getString(R.string.texto_deletarConta), this, this);
     }
     public void RetornoModal(boolean resultado){
         if(resultado) {
             if(retorno.equals("deslogar")) {
+                Deslogar();
             }
             else if(retorno.equals("deletar")) {
                 if(!segundo){
                     segundo = true;
-                    FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-                    funcao.ModalConfirmacao(getResources().getString(R.string.titulo_deletarConta),getResources().getString(R.string.texto_deletarConta2), this, this);
+                    funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_deletarConta),getResources().getString(R.string.texto_deletarConta2), this, this);
                 }
                 else {
                     segundo = false;
@@ -203,15 +189,13 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
         }
     }
     public void Deslogar (){
-        FirebaseAuth.getInstance().signOut();
-        mGoogleSignInClient.signOut();
-        Intent intent = new Intent(getApplicationContext(),LoguinActivity.class);
+        funcoes.DeslogarGoogle(this);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
         startActivity(intent);
     }
     public void MudarIdioma (String linguagem){
-        FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-        funcao.MudarIdioma(linguagem,this.getResources());
+        funcoes.MudarIdioma(linguagem,this.getResources());
         DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
         DUOH.EditarUsuario(usuarioAtual.getId(),linguaremEscolhida);
         DUOH.close();
@@ -225,8 +209,7 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
         //linguaremEscolhida = position;
         if(mudarLinguagem) {
             retorno = "linguagem";
-            FuncoesCompartilhadas funcao = new FuncoesCompartilhadas();
-            funcao.ModalConfirmacao(getResources().getString(R.string.titulo_linguagem), getResources().getString(R.string.texto_linguagem), this, this);
+            funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_linguagem), getResources().getString(R.string.texto_linguagem), this, this);
         }
         Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT);
         mudarLinguagem = true;

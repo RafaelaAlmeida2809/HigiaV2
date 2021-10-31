@@ -120,29 +120,6 @@ public class DadosConsultasOpenHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
         return true;
     }
-
-    /*
-    public List<Integer> buscaIdConsultasString(String nome,String valor,String ordem) {
-        SQLiteDatabase db = getReadableDatabase();
-        String sql = "SELECT id FROM consulta WHERE " + nome + " = '" + valor + "' ORDER BY "+nome+" COLLATE NOCASE " + ordem +";";
-        Cursor c = db.rawQuery(sql, null);
-        List<Integer> consultas = new ArrayList<Integer>();
-        while (c.moveToNext()) {
-            consultas.add(c.getInt(c.getColumnIndex("id")));
-        }
-        return consultas;
-    }
-    public List<Integer> buscaIdConsultasInt(String nome,int valor,String ordem) {
-        SQLiteDatabase db = getReadableDatabase();
-        String sql = "SELECT * FROM consulta WHERE " + nome + " = " + valor + " ORDER BY "+nome+" COLLATE NOCASE " + ordem +";";
-        Cursor c = db.rawQuery(sql, null);
-        List<Integer> consultas = new ArrayList<Integer>();
-        while (c.moveToNext()) {
-            consultas.add(c.getInt(c.getColumnIndex("id")));
-        }
-        return consultas;
-    }
-    */
     public List<Integer> buscaIdConsultas(String nome,String valor,String ordem, int idUsuarioAtual) {
         SQLiteDatabase db = getReadableDatabase();
         String sql = "SELECT * FROM consulta WHERE " + nome + " = " + valor + " AND idUsuario = "+ idUsuarioAtual+" ORDER BY "+nome+" COLLATE NOCASE " + ordem +";";
