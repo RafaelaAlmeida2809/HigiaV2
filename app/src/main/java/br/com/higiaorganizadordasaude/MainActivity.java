@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +23,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.squareup.picasso.Picasso;
+
+import java.util.Locale;
+
+import dataBase.DadosUsuariosOpenHelper;
 import dataBase.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -71,6 +77,14 @@ public class MainActivity extends AppCompatActivity implements MyInterface {
             Picasso.with(this).load(imageUri).fit().placeholder(R.mipmap.ic_launcher_round).into(imagemPerfil);
         }
 
+        //Mudar idioma
+        String[] siglaLinguagem = getResources().getStringArray(R.array.linguagenSigla);
+        DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
+        Usuario usuario = DUOH.BuscaUsuarioPeloEmail(signInAccount.getEmail());
+        if(!getResources().getConfiguration().locale.getLanguage().equals(siglaLinguagem[usuario.getLinguagem()])) {
+            MudarIdioma(siglaLinguagem[usuario.getLinguagem()]);
+        }
+
         //Retorno
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -78,9 +92,9 @@ public class MainActivity extends AppCompatActivity implements MyInterface {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
-
+                            ReinicarActivity();
                         }
-                        else if(retornoPerfil) {
+                        else {
                             ReinicarActivity();
                         }
                     }
@@ -129,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements MyInterface {
 
     public  void abrirPerfil(View v){
         Intent perfilActivity = new Intent(this,perfilActivity.class);
-        startActivity(perfilActivity);
+        activityResultLauncher.launch(perfilActivity);
     }
 
     public void ModalDeslogar (View v) {
@@ -152,6 +166,18 @@ public class MainActivity extends AppCompatActivity implements MyInterface {
         int tamanhoHigia = ((displayMetrics.heightPixels*550)/1920);
         ImageView imagemHigia = findViewById(R.id.imagemHigia);
         imagemHigia.setLayoutParams(new LinearLayout.LayoutParams(tamanhoHigia, tamanhoHigia));
+    }
+
+    public void MudarIdioma (String linguagem){
+        Locale local = new Locale(linguagem);
+        Locale.setDefault(local);
+        Resources resources = this.getResources();
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = local;
+        resources.updateConfiguration(configuration,resources.getDisplayMetrics());
+        Intent intent = new Intent(getApplicationContext(),perfilActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
 

@@ -67,13 +67,6 @@ public class FuncoesCompartilhadas {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    public void MudarIdioma (String linguagem, Resources resources){
-        Locale local = new Locale(linguagem);
-        Locale.setDefault(local);
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = local;
-        resources.updateConfiguration(configuration,resources.getDisplayMetrics());
-    }
     public Integer VerificarLogin(Context context){
         createRequest(context);
         signInAccount = GoogleSignIn.getLastSignedInAccount(context);

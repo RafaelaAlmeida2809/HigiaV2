@@ -5,6 +5,8 @@ import androidx.core.content.FileProvider;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,8 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
+
 import dataBase.DadosConsultasOpenHelper;
 import dataBase.DadosExamesOpenHelper;
 import dataBase.DadosMedicosOpenHelper;
@@ -44,6 +50,7 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
     boolean segundo;
     FuncoesCompartilhadas funcoes;
 
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,18 +66,33 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
         if(IdUsuarioAtual == -1){
             AbrirLogin();
         }
+        else {
+            DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
+            usuarioAtual = DUOH.BuscaUsuarioPeloEmail(signInAccount.getEmail());
+        }
 
         // atribuindo Views
         signInAccount = GoogleSignIn.getLastSignedInAccount(this);
         textNomeUsuario = findViewById(R.id.textNomeUsuario);
+        textNomeUsuario.setText(signInAccount.getDisplayName());
         textEmailUsuario = findViewById(R.id.textEmailUsuario);
+        textEmailUsuario.setText(signInAccount.getEmail());
         imagemPerfil = findViewById(R.id.imagemPerfil);
+        Uri imageUri =  signInAccount.getPhotoUrl();
+        Picasso.with(this).load(imageUri).fit().placeholder(R.mipmap.ic_launcher_round).into(imagemPerfil);
         imagemModal = findViewById(R.id.imagemModal);
         spinnerLinguagem =findViewById(R.id.spinnerLinguagem);
 
         //Carregar spinners
         funcoes.CriarSpinner(this,spinnerLinguagem,R.array.linguagens,null);
-
+        //Atualizar Linguagem
+        String[] siglaLinguagem = getResources().getStringArray(R.array.linguagenSigla);
+        for(int i = 0;i<siglaLinguagem.length;i++){
+            if(getResources().getConfiguration().locale.getLanguage().equals(siglaLinguagem[i]))
+            {
+                spinnerLinguagem.setSelection(i);
+            }
+        }
     }
     public void AbrirLogin(){
         Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
@@ -110,13 +132,13 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
             }
             else if(retorno.equals("linguagem")){
                 DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
-                DUOH.EditarUsuario(usuarioAtual.getId(), posicaoSpinner);
-                usuarioAtual = DUOH.BuscaUsuarioPeloEmail(signInAccount.getEmail());
-                if (posicaoSpinner == 0) {
+                DUOH.EditarUsuario(usuarioAtual.getId(), linguaremEscolhida);
+                if (linguaremEscolhida == 0) {
                     MudarIdioma("pt");
-                } else if (posicaoSpinner == 1) {
+                } else if (linguaremEscolhida == 1) {
                     MudarIdioma("en");
                 }
+                DUOH.close();
             }
         }
 
@@ -195,13 +217,18 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void MudarIdioma (String linguagem){
-        funcoes.MudarIdioma(linguagem,this.getResources());
+        Locale local = new Locale(linguagem);
+        Locale.setDefault(local);
+        Resources resources = this.getResources();
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = local;
+        resources.updateConfiguration(configuration,resources.getDisplayMetrics());
         DadosUsuariosOpenHelper DUOH = new DadosUsuariosOpenHelper(getApplicationContext());
         DUOH.EditarUsuario(usuarioAtual.getId(),linguaremEscolhida);
         DUOH.close();
         Intent intent = new Intent(getApplicationContext(),perfilActivity.class);
-        finish();
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -210,6 +237,7 @@ public class perfilActivity extends AppCompatActivity implements AdapterView.OnI
         //linguaremEscolhida = position;
         if(mudarLinguagem) {
             retorno = "linguagem";
+            linguaremEscolhida = position;
             funcoes.ModalConfirmacao(getResources().getString(R.string.titulo_linguagem), getResources().getString(R.string.texto_linguagem), this, this);
         }
         Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT);
